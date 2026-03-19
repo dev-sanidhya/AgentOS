@@ -1,0 +1,65 @@
+{
+  "name": "{{package_name}}",
+  "version": "1.0.0",
+  "description": "LangChain TypeScript Code Review Agent",
+  "main": "dist/{{agent_name}}.js",
+  "types": "dist/{{agent_name}}.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node {{agent_name}}.ts",
+    "start": "node dist/{{agent_name}}.js",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "^0.3.0",
+    "@langchain/openai": "^0.2.0",
+    "@langchain/core": "^0.3.0",
+    "langchain": "^0.3.0",
+    "zod": "^3.22.4",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "@types/jest": "^29.5.12",
+    "ts-jest": "^29.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "langchain",
+    "typescript",
+    "code-review",
+    "ai",
+    "agent",
+    "security",
+    "analysis",
+    "openai",
+    "anthropic"
+  ],
+  "author": "{{author_name}}",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "{{repository_url}}"
+  },
+  "bugs": {
+    "url": "{{repository_url}}/issues"
+  },
+  "homepage": "{{repository_url}}#readme",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "package.json"
+  ]
+}

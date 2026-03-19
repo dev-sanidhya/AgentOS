@@ -1,0 +1,20 @@
+# Core CrewAI dependencies
+crewai>=0.28.0
+crewai-tools>=0.1.0
+
+# LLM providers
+openai>=1.0.0
+langchain-openai>=0.0.5
+langchain-anthropic>=0.1.0
+
+# Web tools
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Optional: Additional search APIs
+# serper-api>=1.0.0       # For SerperDev integration (recommended)
+# google-search-results>=2.4.2  # For SerpAPI
+# tavily-python>=0.3.0   # For Tavily Search
