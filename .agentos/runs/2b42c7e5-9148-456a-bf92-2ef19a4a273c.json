@@ -1,0 +1,36 @@
+{
+  "id": "2b42c7e5-9148-456a-bf92-2ef19a4a273c",
+  "timestamp": "2026-03-20T13:13:22.284Z",
+  "projectName": "AgentOS",
+  "cwd": "C:\\CS\\AgentOS",
+  "agent": {
+    "id": "summarize-text-into-bullet-points",
+    "slug": "summarize-text-into-bullet-points",
+    "name": "Summarize text into bullet points",
+    "summary": "Custom agent for summarize text into bullet points",
+    "description": "Task: Summarize text into bullet points\nExpected inputs: A block of text\nExpected outputs: Markdown bullet-point summary",
+    "category": "general",
+    "tags": [
+      "general",
+      "summarize-text-into-bullet-points"
+    ],
+    "kind": "custom",
+    "allowedTools": [],
+    "outputShape": "Markdown bullet-point summary"
+  },
+  "input": "AgentOS is a library of pre-built AI agents that anyone can import and use. It wraps the Anthropic Claude SDK and provides 8 agents out of the box. Users authenticate via OAuth tokens from their Claude Max plan.",
+  "inputPreview": "AgentOS is a library of pre-built AI agents that anyone can import and use. It wraps the Anthropic Claude SDK and provides 8 agents out of the box. Users authenticate via OAuth tokens from their Claude Max plan.",
+  "output": "Here is a bullet-point summary of the provided text:\n\n- **AgentOS** is a pre-built library of AI agents available for anyone to import and use.\n- It is built on top of the **Anthropic Claude SDK**, wrapping its functionality for easier access.\n- The library comes with **8 agents included out of the box**, ready to use without custom setup.\n- Users authenticate using **OAuth tokens** obtained through their **Claude Max plan** subscription.",
+  "outputPreview": "Here is a bullet-point summary of the provided text:\n\n- **AgentOS** is a pre-built library of AI agents available for anyone to import and use.\n- It is built on top of the **Anthropic Claude SDK**, wrapping its functionality for easier access.\n- The library comes with **8 agents included out of the box**, ready to use without custom setup.\n- Users authenticate using **OAuth tokens** obtained through their **Claude Max plan** subscription.",
+  "success": true,
+  "toolCalls": [],
+  "tokensUsed": {
+    "input": 3,
+    "output": 140,
+    "total": 143
+  },
+  "cost": 0.0088,
+  "duration": 8433,
+  "loops": 1,
+  "authMode": "oauth_token"
+}

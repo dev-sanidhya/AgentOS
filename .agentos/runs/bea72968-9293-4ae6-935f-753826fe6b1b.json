@@ -1,0 +1,60 @@
+{
+  "id": "bea72968-9293-4ae6-935f-753826fe6b1b",
+  "timestamp": "2026-03-20T13:12:37.715Z",
+  "projectName": "AgentOS",
+  "cwd": "C:\\CS\\AgentOS",
+  "agent": {
+    "id": "bug-triager",
+    "slug": "bug-triager",
+    "name": "Bug Triager",
+    "summary": "Classifies bug reports and suggests likely root causes and fixes.",
+    "description": "Takes a bug report and returns severity, diagnosis, and next actions.",
+    "category": "engineering",
+    "tags": [
+      "bug",
+      "triage",
+      "engineering"
+    ],
+    "kind": "built_in",
+    "allowedTools": [
+      "Read",
+      "Glob",
+      "Grep"
+    ],
+    "outputShape": "Bug triage report with severity and probable fix"
+  },
+  "input": "Bug: The web_search tool returns \"No results found\" even when BRAVE_SEARCH_API_KEY is set. Steps to reproduce: Set BRAVE_SEARCH_API_KEY=valid_key, call webSearchTool.execute({query: \"test\"}). Expected: search results. Actual: \"No results found\". Relevant file: packages/agents/src/tools/web-search.ts",
+  "inputPreview": "Bug: The web_search tool returns \"No results found\" even when BRAVE_SEARCH_API_KEY is set. Steps to reproduce: Set BRAVE_SEARCH_API_KEY=valid_key, call webSearchTool.execute({query: \"test\"}). Expected: search results. Actual: \"No results found\". Relevant file: packages/agents/src/tools/web-search.ts",
+  "output": "Good — I have the full source. Let me do a thorough analysis now.\n\n---\n\n## 🐛 Bug Triage Report\n\n### Classification\n| Field | Value |\n|---|---|\n| **Severity** | High |\n| **Priority** | P2 |\n| **Category** | Defect — API Integration / Error Handling |\n\n---\n\n### Summary\n\n`webSearchTool.execute()` silently returns `\"No results found\"` when the Brave Search API call either fails or returns an unexpected response shape. The root cause is a combination of **missing error handling** in `searchWithBrave` and a **potential response-shape mismatch** caused by the manual `Accept-Encoding: gzip` header.\n\n---\n\n### Root Cause Analysis\n\nThere are **two compounding defects** in `packages/agents/src/tools/web-search.ts`:\n\n#### Defect 1 — Missing `try/catch` in `searchWithBrave` (lines 43–73)\n\n```ts\n// ❌ No error handling at all\nasync function searchWithBrave(query, maxResults, apiKey): Promise<string> {\n  const response = await axios.get(\"https://api.search.brave.com/...\", { ... });\n  ...\n}\n```\n\nIf the Brave API returns a non-2xx status (e.g. `401 Unauthorized`, `429 Rate Limited`, `500 Server Error`), **axios throws an exception**. Because neither `searchWithBrave` nor `execute` catches it, the error propagates to the caller. Depending on the calling framework, this unhandled rejection may be swallowed and replaced with a generic message like `\"No results found\"`.\n\n#### Defect 2 — Manual `Accept-Encoding: gzip` header (line 52)\n\n```ts\nheaders: {\n  Accept: \"application/json\",\n  \"Accept-Encoding\": \"gzip\",   // ⚠️ Risky manual override\n  \"X-Subscription-Token\": apiKey,\n},\n```\n\nManually forcing `Accept-Encoding: gzip` instructs the server to send a gzip-compressed body. While recent axios versions set `decompress: true` by default, **this is fragile and environment-dependent** (e.g., some bundlers, test environments, or older axios versions may not decompress automatically). If decompression fails, `response.data` arrives as a raw `Buffer`. The optional-chaining access `response.data.web?.results` then silently evaluates to `undefined`, falls back to `[]` (line 58), and returns `\"No results found\"` — **with no indication that anything went wrong**.\n\n```ts\n// Line 58 — silent fallback to empty array if data is a Buffer or wrong shape\nconst results = response.data.web?.results ?? [];\n\nif (results.length === 0) {\n  return `No results found for \"${query}\".`;  // ← This is what the reporter sees\n}\n```\n\nThis is the **most probable direct cause** of the reported symptom.\n\n---\n\n### Probable Fix\n\n1. **Remove the manual `Accept-Encoding` header** — let axios handle content negotiation automatically, or explicitly set `decompress: true` in the config.\n2. **Wrap `searchWithBrave` in a `try/catch`** — return a descriptive error string rather than throwing, consistent with the `searchWithDDG` pattern (which already does this correctly on line 109).\n3. **Log or surface the raw error** so future failures are diagnosable.\n\n```ts\n// Suggested fix sketch\nasync function searchWithBrave(query, maxResults, apiKey): Promise<string> {\n  try {\n    const response = await axios.get(\"https://api.search.brave.com/res/v1/web/search\", {\n      params: { q: query, count: maxResults },\n      headers: {\n        Accept: \"application/json\",\n        // ✅ Remove explicit Accept-Encoding — let axios handle it\n        \"X-Subscription-Token\": apiKey,\n      },\n      decompress: true,  // ✅ Explicit is better than implicit\n      timeout: 10000,\n    });\n\n    const results = response.data.web?.results ?? [];\n    if (results.length === 0) {\n      return `No results found for \"${query}\".`;\n    }\n    // ... rest of formatting unchanged\n  } catch (err) {\n    // ✅ Catch and surface the actual error\n    const message = axios.isAxiosError(err)\n      ? `Brave Search API error: ${err.response?.status} ${err.response?.statusText}`\n      : `Brave Search request failed: ${String(err)}`;\n    return `Search failed for \"${query}\". ${message}`;\n  }\n}\n```\n\n---\n\n### Impact Assessment\n\n| Dimension | Assessment |\n|---|---|\n| **User impact** | High — tool appears to work but returns no results, causing silent data loss and broken agent workflows |\n| **Blast radius** | Any agent using `web_search` with `BRAVE_SEARCH_API_KEY` set |\n| **Data loss** | No persistent data affected |\n| **Security** | No direct risk, but obscured API auth failures (401) could mask a leaked/invalid key going unnoticed |\n\n---\n\n### Reproduction Confidence\n\n**High (85%)** — The `Accept-Encoding: gzip` + no error handling path is very likely to trigger in standard Node.js environments. The exact behavior on unhandled throw depends on the calling harness, which we haven't inspected.\n\n---\n\n### Questions for the Reporter\n\n1. **What version of `axios` is installed?** (`npm ls axios`) — decompression behavior differs across versions.\n2. **Are you seeing any uncaught exception / unhandled promise rejection in the console**, or is the string `\"No results found\"` the only output?\n3. **What does the Brave API return when you call it directly** (e.g., with `curl -H \"X-Subscription-Token: $BRAVE_SEARCH_API_KEY\" \"https://api.search.brave.com/res/v1/web/search?q=test\"`)? This isolates whether the key is valid and the API is responding correctly.\n4. **What is the runtime environment?** (Node.js version, bundled via webpack/esbuild, etc.) — affects gzip decompression behavior.\n5. **Is this a fresh API key?** New Brave Search API keys sometimes have a brief activation delay or require plan selection before returning results.",
+  "outputPreview": "Good — I have the full source. Let me do a thorough analysis now.\n\n---\n\n## 🐛 Bug Triage Report\n\n### Classification\n| Field | Value |\n|---|---|\n| **Severity** | High |\n| **Priority** | P2 |\n| **Category** | Defect — API Integration / Error Handling |\n\n---\n\n### Summary\n\n`webSearchTool.execute()` silently returns `\"No results found\"` when the Brave Search API call either fails or returns an unexpected response shape. The root cause is a combination of **missing error handling** in `searchWithBrave",
+  "success": true,
+  "toolCalls": [
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "packages/agents/src/tools/web-search.ts"
+      },
+      "output": "",
+      "duration": 0,
+      "success": true
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "C:\\CS\\AgentOS\\packages\\agents\\src\\tools\\web-search.ts"
+      },
+      "output": "",
+      "duration": 0,
+      "success": true
+    }
+  ],
+  "tokensUsed": {
+    "input": 5,
+    "output": 3880,
+    "total": 3885
+  },
+  "cost": 0.0775,
+  "duration": 76732,
+  "loops": 3,
+  "authMode": "oauth_token"
+}

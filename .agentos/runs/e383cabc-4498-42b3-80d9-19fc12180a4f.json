@@ -1,0 +1,70 @@
+{
+  "id": "e383cabc-4498-42b3-80d9-19fc12180a4f",
+  "timestamp": "2026-03-20T13:14:39.080Z",
+  "projectName": "AgentOS",
+  "cwd": "C:\\CS\\AgentOS",
+  "agent": {
+    "id": "research-agent",
+    "slug": "research-agent",
+    "name": "Research Agent",
+    "summary": "Multi-source web research with structured reports and citations.",
+    "description": "Researches a topic across the web and returns a concise cited report.",
+    "category": "research",
+    "tags": [
+      "research",
+      "analysis",
+      "citations"
+    ],
+    "kind": "built_in",
+    "allowedTools": [
+      "WebSearch",
+      "WebFetch",
+      "Read"
+    ],
+    "outputShape": "Structured report with findings, analysis, and sources"
+  },
+  "input": "Compare Vercel AI SDK vs Mastra for TypeScript agent development in under 250 words with sources.",
+  "inputPreview": "Compare Vercel AI SDK vs Mastra for TypeScript agent development in under 250 words with sources.",
+  "output": "## Vercel AI SDK vs. Mastra: TypeScript Agent Development\n\n### Key Findings\n\n| | **Vercel AI SDK** | **Mastra** |\n|---|---|---|\n| **Origin** | Vercel (Next.js team) | Gatsby team, $13M seed (YC-backed) |\n| **Focus** | UI-first, full-stack web apps | Backend-first, autonomous agents |\n| **Workflows** | Via Temporal integration | Built-in orchestration engine |\n| **Memory** | Session-level | Short- & long-term (cross-session) |\n| **Providers** | 20+ LLM providers | 40+ LLM providers |\n| **Downloads** | 20M+/month | Growing, used by PayPal, Adobe |\n\n### Analysis\n\n**Vercel AI SDK (v6)** is the dominant choice for **web-centric TypeScript apps**. Its `Agent` abstraction integrates natively with Next.js/React, delivers end-to-end type safety, and features built-in DevTools and human-in-the-loop tool approval. Durable execution comes via a Temporal integration rather than being native. Best for teams already in the Vercel ecosystem.\n\n**Mastra** is purpose-built for **autonomous, long-running agents**. It ships with native workflow orchestration, RAG pipelines, vector DB management, and cross-session memory out of the box — no third-party glue required. It's gaining real production traction (Adobe, Docker, Elastic) and is updated aggressively.\n\n### Bottom Line\n- **Choose Vercel AI SDK** for Next.js apps, streaming UIs, and quick LLM integrations.\n- **Choose Mastra** for complex, stateful, multi-step agents where memory and workflow orchestration are first-class needs.\n\n---\n\n### Sources\n- [Vercel AI SDK Docs](https://ai-sdk.dev/docs/introduction)\n- [AI SDK 6 Announcement – Vercel](https://vercel.com/blog/ai-sdk-6)\n- [Building AI Agents with Vercel AI SDK – Vercel KB](https://vercel.com/kb/guide/how-to-build-ai-agents-with-vercel-and-the-ai-sdk)\n- [Temporal + Vercel AI SDK](https://temporal.io/blog/building-durable-agents-with-temporal-and-ai-sdk-by-vercel)\n- [Mastra Homepage](https://mastra.ai/)\n- [Mastra GitHub](https://github.com/mastra-ai/mastra)\n- [Mastra $13M Seed Round](https://technews180.com/funding-news/mastra-raises-13m-seed-for-typescript-ai-framework/)\n- [Top 5 TypeScript AI Agent Frameworks 2026 – Medium](https://techwithibrahim.medium.com/top-5-typescript-ai-agent-frameworks-you-should-know-in-2026-5a2a0710f4a0)",
+  "outputPreview": "## Vercel AI SDK vs. Mastra: TypeScript Agent Development\n\n### Key Findings\n\n| | **Vercel AI SDK** | **Mastra** |\n|---|---|---|\n| **Origin** | Vercel (Next.js team) | Gatsby team, $13M seed (YC-backed) |\n| **Focus** | UI-first, full-stack web apps | Backend-first, autonomous agents |\n| **Workflows** | Via Temporal integration | Built-in orchestration engine |\n| **Memory** | Session-level | Short- & long-term (cross-session) |\n| **Providers** | 20+ LLM providers | 40+ LLM providers |\n| **Download",
+  "success": true,
+  "toolCalls": [
+    {
+      "tool": "ToolSearch",
+      "input": {
+        "query": "select:WebSearch",
+        "max_results": 1
+      },
+      "output": "",
+      "duration": 0,
+      "success": true
+    },
+    {
+      "tool": "WebSearch",
+      "input": {
+        "query": "Vercel AI SDK TypeScript agent development 2026"
+      },
+      "output": "",
+      "duration": 0,
+      "success": true
+    },
+    {
+      "tool": "WebSearch",
+      "input": {
+        "query": "Mastra TypeScript agent framework 2026"
+      },
+      "output": "",
+      "duration": 0,
+      "success": true
+    }
+  ],
+  "tokensUsed": {
+    "input": 966,
+    "output": 1011,
+    "total": 1977
+  },
+  "cost": 0.1001,
+  "duration": 31516,
+  "loops": 4,
+  "authMode": "oauth_token"
+}

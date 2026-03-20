@@ -1,0 +1,37 @@
+{
+  "id": "9a462f7f-51bd-40a0-ba74-2ad1a6a09559",
+  "timestamp": "2026-03-20T13:10:00.205Z",
+  "projectName": "AgentOS",
+  "cwd": "C:\\CS\\AgentOS",
+  "agent": {
+    "id": "email-drafter",
+    "slug": "email-drafter",
+    "name": "Email Drafter",
+    "summary": "Drafts concise professional emails for outreach, follow-ups, and updates.",
+    "description": "Writes complete emails with subject line and CTA.",
+    "category": "business",
+    "tags": [
+      "email",
+      "communication",
+      "drafting"
+    ],
+    "kind": "built_in",
+    "allowedTools": [],
+    "outputShape": "Complete email with subject, body, and sign-off"
+  },
+  "input": "Write a short follow-up email to a potential investor after a 30-min demo call. Casual tone.",
+  "inputPreview": "Write a short follow-up email to a potential investor after a 30-min demo call. Casual tone.",
+  "output": "Here's your follow-up email:\n\n---\n\n**Subject:** Great connecting today, [Investor Name]!\n\n---\n\n**Body:**\n\nHey [Investor Name],\n\nReally enjoyed our chat earlier today — thanks for taking the time to see [Product/Company Name] in action.\n\nLoved your thoughts on [specific topic discussed]. It's clear you get the space, and that kind of perspective is exactly what we're looking for in a partner.\n\nAs promised, I've attached our deck and a one-pager with the key metrics. Happy to go deeper on anything — financials, roadmap, the team — whatever's most useful for you next.\n\nAre you open to a follow-up call next week? I can send over a Calendly link, or just let me know what works.\n\n---\n\n**Sign-off:**\n\nThanks again — really excited about the possibility of working together.\n\n[Your Name]\n[Title] | [Company]\n[Phone / LinkedIn]\n\n---\n\n**💡 Tips to personalize it:**\n| Placeholder | Replace with |\n|---|---|\n| `[specific topic discussed]` | e.g., \"go-to-market strategy,\" \"the churn numbers\" |\n| `[Product/Company Name]` | Your actual company name |\n| `[Investor Name]` | First name for casual tone |\n\nThe email hits **casual but credible** — warm without being sycophantic, and closes with a concrete next step. Let me know if you'd like a more formal version or want to adjust the ask!",
+  "outputPreview": "Here's your follow-up email:\n\n---\n\n**Subject:** Great connecting today, [Investor Name]!\n\n---\n\n**Body:**\n\nHey [Investor Name],\n\nReally enjoyed our chat earlier today — thanks for taking the time to see [Product/Company Name] in action.\n\nLoved your thoughts on [specific topic discussed]. It's clear you get the space, and that kind of perspective is exactly what we're looking for in a partner.\n\nAs promised, I've attached our deck and a one-pager with the key metrics. Happy to go deeper on anything",
+  "success": true,
+  "toolCalls": [],
+  "tokensUsed": {
+    "input": 3,
+    "output": 394,
+    "total": 397
+  },
+  "cost": 0.0122,
+  "duration": 12897,
+  "loops": 1,
+  "authMode": "oauth_token"
+}

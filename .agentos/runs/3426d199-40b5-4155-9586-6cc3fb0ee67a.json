@@ -1,0 +1,87 @@
+{
+  "id": "3426d199-40b5-4155-9586-6cc3fb0ee67a",
+  "timestamp": "2026-03-20T13:11:20.980Z",
+  "projectName": "AgentOS",
+  "cwd": "C:\\CS\\AgentOS",
+  "agent": {
+    "id": "code-review-agent",
+    "slug": "code-review-agent",
+    "name": "Code Review Agent",
+    "summary": "Security, quality, and performance reviews for source code.",
+    "description": "Reviews files or folders and returns prioritized feedback.",
+    "category": "engineering",
+    "tags": [
+      "code",
+      "review",
+      "engineering"
+    ],
+    "kind": "built_in",
+    "allowedTools": [
+      "Read",
+      "Glob",
+      "Grep"
+    ],
+    "outputShape": "Prioritized code review with findings and recommendations"
+  },
+  "input": "./packages/agents/src/config.ts",
+  "inputPreview": "./packages/agents/src/config.ts",
+  "output": "---\n\n## Code Review: `packages/agents/src/config.ts`\n\n---\n\n### Summary\n\nThe file implements a module-level singleton config store with auth resolution logic. It's concise and well-documented, but has a **critical priority inversion bug** in `resolveAuth()`, a subtle **module-load-time side-effect**, a **misleading legacy helper**, and several minor maintainability gaps.\n\n---\n\n### 🔴 Critical Issues\n\n#### 1. Auth priority comment is the inverse of the actual code behavior — `config.ts:83–109`\n\nThe JSDoc on `resolveAuth()` says:\n\n```\n1. CLAUDE_CODE_OAUTH_TOKEN (env var — highest priority)\n2. Config oauthToken\n...\n5. Config apiKey (lowest priority)\n```\n\nBut the code does:\n\n```ts\nconst oauthToken =\n  globalConfig.oauthToken ??   // ← checked first (config wins)\n  process.env.CLAUDE_CODE_OAUTH_TOKEN;\n\nconst apiKey =\n  globalConfig.apiKey ??       // ← checked first (config wins)\n  process.env.AGENTOS_API_KEY ??\n  process.env.ANTHROPIC_API_KEY;\n```\n\n**Config always wins over env vars** — the exact opposite of what the comment states. This is a semantic correctness bug: consumers reading the docs will expect env vars to override `configure()` calls, but they don't. Either the comment or the code must be fixed. For an SDK the behavior (config > env) is arguably correct, but the comment is definitively wrong and will mislead integrators.\n\n---\n\n### 🟠 High Issues\n\n#### 2. `DEFAULT_STORAGE_DIR` is evaluated at module import time — `config.ts:7`\n\n```ts\nconst DEFAULT_STORAGE_DIR = path.join(process.cwd(), \".agentos\");\n```\n\n`process.cwd()` is captured once, when the module is first `import`ed. If the caller changes directory before calling `getConfig()`, or if tests run from a different working directory than production code, the storage path will silently point to the wrong location. The `projectName` default on line 59 has the same problem.\n\n**Fix:** Move these into `getConfig()` so they're evaluated lazily:\n\n```ts\nstorageDir: globalConfig.storageDir ?? path.join(process.cwd(), \".agentos\"),\nprojectName: globalConfig.projectName ?? path.basename(process.cwd()),\n```\n\n#### 3. `configure({})` silently wipes all configuration — `config.ts:33–35`\n\n```ts\nif (Object.keys(config).length === 0) {\n  globalConfig = {}; // ← full reset\n}\n```\n\nThis is a hidden side-effect. A caller passing an empty destructured object or a conditional config can silently destroy all previously set credentials with no warning. This behavior is not reflected in the public JSDoc. At minimum, document it clearly. Consider using an explicit `resetConfig()` export instead.\n\n---\n\n### 🟡 Improvements\n\n#### 4. `resolveApiKey()` is misleadingly named and returns OAuth tokens — `config.ts:127–132`\n\n```ts\nexport function resolveApiKey(): string {\n  const auth = resolveAuth();\n  if (auth.apiKey) return auth.apiKey;\n  if (auth.oauthToken) return auth.oauthToken; // ← returns an OAuth token!\n  throw new Error(\"No API key or OAuth token found.\");\n}\n```\n\nThe function name says \"ApiKey\" but it silently returns an OAuth token when that's all that's available. Callers using this for `Authorization: Bearer <resolveApiKey()>` headers may pass the wrong credential type to a backend that distinguishes them. The deprecation comment says \"prefer `resolveAuth()`\" — consider adding a `@deprecated` JSDoc tag and a runtime `console.warn` to actively push users off it.\n\n#### 5. `getConfig()` return type doesn't reflect all always-present fields — `config.ts:44–61`\n\n```ts\nexport function getConfig(): Required<\n  Pick<GlobalConfig, \"defaultModel\" | \"maxLoops\" | \"verbose\" | \"maxSpendPerRun\" | \"persistRuns\">\n> & GlobalConfig\n```\n\n`storageDir` and `projectName` are always populated in the return value (line 58–59), but the type signature leaves them as `string | undefined` (inherited from `GlobalConfig`). This weakens the type contract and forces callers to do unnecessary null-checks. Add them to the `Required<Pick<...>>` list.\n\n#### 6. No input validation in `configure()` — `config.ts:32–39`\n\nNumeric values like `maxLoops` and `maxSpendPerRun` are accepted without guards:\n\n```ts\nconfigure({ maxLoops: -1 });       // silently accepted\nconfigure({ maxSpendPerRun: NaN }); // silently accepted\n```\n\nA negative `maxLoops` or `NaN` spend limit could cause runaway loops or a broken circuit-breaker. Add basic guards or throw an `Error` on invalid values.\n\n#### 7. No test-safe reset utility\n\nThe only reset mechanism is the undocumented `configure({})` empty-object trick. Tests that run multiple scenarios against different auth modes have no clean, explicit API to restore state. Export a `resetConfig()` function (or document `configure({})` formally as the reset mechanism).\n\n---\n\n### 💡 Suggestions\n\n- **Env var support for more fields** — `maxLoops`, `verbose`, and `maxSpendPerRun` are only configurable via `configure()` or code. Adding `AGENTOS_MAX_LOOPS`, `AGENTOS_VERBOSE`, etc. would make the library easier to tune in CI/CD without code changes.\n- **Credential leak risk in `verbose` mode** — If any caller logs `getConfig()` output for debugging, `apiKey` and `oauthToken` would appear in logs. Consider masking credentials in the config object (e.g., returning `apiKey: \"sk-ant-***\"` in verbose output), or excluding them from `getConfig()` entirely since `resolveAuth()` is the proper API.\n- **`baseUrl` not validated** — An invalid URL passed as `baseUrl` will produce confusing runtime errors deep in HTTP call stacks rather than at `configure()` time. A simple `new URL(baseUrl)` check would surface the error early.\n\n---\n\n### ✅ What Is Good\n\n- **Auth fallback chain** is a solid pattern — supporting OAuth, proxy keys, and direct API keys in a single resolution function is clean and practical.\n- **Spread-merge config** (`{ ...globalConfig, ...config }`) correctly implements partial updates without losing unrelated fields.\n- **JSDoc examples** in `configure()` are excellent — the three concrete examples cover the most important use-cases clearly.\n- **`DEFAULT_MAX_SPEND_PER_RUN` as a circuit-breaker default** is a thoughtful safety measure.\n- **`AuthConfig` interface** and the `AuthMode` union type keep auth handling explicit and type-safe across the codebase.\n\n---\n\n| Severity | Issue | Location |\n|---|---|---|\n| 🔴 Critical | Auth priority comment inverted vs. code | L77–109 |\n| 🟠 High | `DEFAULT_STORAGE_DIR` captured at module load | L7 |\n| 🟠 High | `configure({})` silent full reset, undocumented | L33–35 |\n| 🟡 Medium | `resolveApiKey()` returns OAuth tokens misleadingly | L127–132 |\n| 🟡 Medium | Return type missing `storageDir`/`projectName` as required | L44–61 |\n| 🟡 Medium | No validation on numeric config fields | L32–39 |\n| 🟡 Medium | No explicit reset utility for tests | — |",
+  "outputPreview": "---\n\n## Code Review: `packages/agents/src/config.ts`\n\n---\n\n### Summary\n\nThe file implements a module-level singleton config store with auth resolution logic. It's concise and well-documented, but has a **critical priority inversion bug** in `resolveAuth()`, a subtle **module-load-time side-effect**, a **misleading legacy helper**, and several minor maintainability gaps.\n\n---\n\n### 🔴 Critical Issues\n\n#### 1. Auth priority comment is the inverse of the actual code behavior — `config.ts:83–109`\n\nTh",
+  "success": true,
+  "toolCalls": [
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "/Users/x/packages/agents/src/config.ts"
+      },
+      "output": "",
+      "duration": 0,
+      "success": true
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "packages/agents/src/config.ts"
+      },
+      "output": "",
+      "duration": 0,
+      "success": true
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "C:\\CS\\AgentOS\\packages\\agents\\src\\config.ts"
+      },
+      "output": "",
+      "duration": 0,
+      "success": true
+    },
+    {
+      "tool": "Glob",
+      "input": {
+        "pattern": "packages/agents/src/types.ts"
+      },
+      "output": "",
+      "duration": 0,
+      "success": true
+    },
+    {
+      "tool": "Read",
+      "input": {
+        "file_path": "C:\\CS\\AgentOS\\packages\\agents\\src\\types.ts"
+      },
+      "output": "",
+      "duration": 0,
+      "success": true
+    }
+  ],
+  "tokensUsed": {
+    "input": 8,
+    "output": 3794,
+    "total": 3802
+  },
+  "cost": 0.0981,
+  "duration": 80768,
+  "loops": 6,
+  "authMode": "oauth_token"
+}
