@@ -1,356 +1,243 @@
-# 🤖 Agent Platform
+# AgentOS
 
-> The first comprehensive Developer Experience Platform for AI Agents
+Pre-built AI agents you can import and use in one line. No AI knowledge required.
 
-Build, test, and deploy AI agents with a powerful CLI, real-time dev server, and production-ready templates.
+**Think shadcn, but for AI agents.**
 
-## ✨ Features
-
-- 🚀 **CLI-First**: Simple commands to scaffold, run, and manage AI agents
-- 🔍 **Real-time Observability**: Dev server with live agent execution viewer
-- 🧪 **Testing Framework**: Unit test your agents with mock tools and assertions
-- 📦 **High-Quality Templates**: Production-ready agents (research, code review, and more)
-- 🛠️ **Extensible Tools**: Built-in tools for web, files, and custom integrations
-- 🎨 **Beautiful UI**: Tailwind-powered dashboard for debugging agents
-- 🌐 **Multi-Provider**: Support for OpenAI, Anthropic, and custom models
-
-## 🚀 Quick Start
-
-### Installation
+## Install
 
 ```bash
-npm install -g @agent-platform/cli
+npm install @agentos/agents
 ```
 
-### Create Your First Project
-
-```bash
-# Initialize a new agent project
-agent init my-agent-project
-
-# Navigate to your project
-cd my-agent-project
-
-# Install dependencies
-npm install
-
-# Run the example agent
-agent run example --input "Hello, world!"
-```
-
-### Start Dev Server
-
-```bash
-# Launch the dev server with real-time UI
-agent dev
-```
-
-The dev server will open at `http://localhost:3000` with:
-- 📊 Real-time execution viewer
-- 🔧 Tool call inspector
-- 💰 Token usage tracking
-- 📝 Execution history
-
-## 📚 Documentation
-
-### CLI Commands
-
-| Command | Description |
-|---------|-------------|
-| `agent init <name>` | Create a new agent project |
-| `agent run <agent> -i <input>` | Execute an agent |
-| `agent list` | List all available agents |
-| `agent dev` | Start development server |
-| `agent test` | Run agent tests |
-| `agent add <template>` | Add agent from template |
-
-### Project Structure
-
-```
-my-agent-project/
-├── agents/              # Your agent definitions
-│   └── example.agent.ts
-├── tools/               # Custom tools
-├── agent.config.ts      # Configuration
-├── .env                 # API keys
-└── package.json
-```
-
-### Creating an Agent
+## Quick Start
 
 ```typescript
-import { AgentDefinition, AgentContext } from '@agent-platform/core';
+import { ResearchAgent } from '@agentos/agents';
 
-const myAgent: AgentDefinition = {
-  name: 'my-agent',
-  version: '1.0.0',
-  description: 'My custom agent',
-
-  systemPrompt: `You are a helpful AI assistant.`,
-
-  tools: ['web-search'], // Tools this agent uses
-
-  config: {
-    model: 'claude-sonnet-4',
-    provider: 'anthropic',
-    temperature: 0.7,
-    maxTokens: 4000,
-  },
-
-  async execute(input: string, context: AgentContext): Promise<string> {
-    // Your agent logic here
-    return `Processed: ${input}`;
-  },
-};
-
-export default myAgent;
+const report = await ResearchAgent.run('Compare React vs Svelte in 2026');
+console.log(report.output);
 ```
 
-## 🎯 Built-in Agent Templates
+That's it. No frameworks to learn. No prompt engineering. No tool configuration.
 
-### Research Agent
-**Best for**: Market research, competitive analysis, information gathering
+## Authentication
+
+### Option 1: Claude Max/Pro Plan (Recommended)
+
+Use your existing Claude subscription — no API billing needed.
 
 ```bash
-agent add research-agent
-agent run research-agent --input "Latest AI trends in 2026"
+# Generate an OAuth token (valid for 1 year)
+claude setup-token
+
+# Set it in your environment
+export CLAUDE_CODE_OAUTH_TOKEN=sk-ant-oat01-...
 ```
 
-Features:
-- Multi-source web search
-- Content extraction and analysis
-- Source citation and verification
-- Comprehensive report generation
+AgentOS auto-detects the token. No code changes needed.
 
-### Code Review Agent
-**Best for**: Pull request reviews, code quality audits, mentoring
+### Option 2: Anthropic API Key
 
 ```bash
-agent add code-review-agent
-agent run code-review-agent --input "./src/app.ts"
+export ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-Features:
-- Code quality analysis
-- Security vulnerability detection
-- Best practices validation
-- Performance optimization suggestions
-- Detailed review reports
-
-## 🛠️ Built-in Tools
-
-### Web Tools
-- **web-search**: Search the web for information
-- **web-scrape**: Extract content from web pages
-- **http-request**: Make HTTP API requests
-
-### File Tools
-- **read-file**: Read file contents
-- **write-file**: Write to files
-- **list-files**: List directory contents
-- **file-stats**: Get file metadata
-
-### Creating Custom Tools
+### Option 3: Explicit Configuration
 
 ```typescript
-import { Tool } from '@agent-platform/core';
-import { z } from 'zod';
+import { configure } from '@agentos/agents';
 
-export const myTool: Tool = {
-  name: 'my-tool',
-  description: 'Description of what this tool does',
+// With OAuth token (Max/Pro plan)
+configure({ oauthToken: process.env.CLAUDE_CODE_OAUTH_TOKEN });
 
-  parameters: z.object({
-    input: z.string().describe('Input parameter'),
-  }),
-
-  async execute(params, context) {
-    // Tool implementation
-    return { result: 'Tool output' };
-  },
-};
+// Or with API key
+configure({ apiKey: process.env.ANTHROPIC_API_KEY });
 ```
 
-## 🔧 Configuration
+**Auth resolution order:** `CLAUDE_CODE_OAUTH_TOKEN` > `AGENTOS_API_KEY` > `ANTHROPIC_API_KEY` > config values.
 
-### Environment Variables
+## Available Agents
 
-Create a `.env` file in your project root:
+| Agent | What it does | Import |
+|-------|-------------|--------|
+| **Research Agent** | Web research with structured reports and citations | `ResearchAgent` |
+| **Code Review Agent** | Security, quality, and best practices analysis | `CodeReviewAgent` |
+| **Content Writer** | Blog posts, docs, marketing copy | `ContentWriter` |
+| **Data Analyst** | CSV/JSON profiling and statistical analysis | `DataAnalyst` |
+| **Competitor Analyzer** | Market landscape and competitive analysis | `CompetitorAnalyzer` |
+| **Email Drafter** | Professional emails — cold outreach, follow-ups, internal comms | `EmailDrafter` |
+| **SEO Auditor** | Website SEO audit with scoring and recommendations | `SEOAuditor` |
+| **Bug Triager** | Bug report classification, root cause analysis, fix suggestions | `BugTriager` |
 
-```env
-# API Keys
-OPENAI_API_KEY=your_openai_key
-ANTHROPIC_API_KEY=your_anthropic_key
-
-# Agent Configuration
-DEFAULT_MODEL=claude-sonnet-4
-ENABLE_LOGGING=true
-```
-
-### Agent Config
-
-Customize agent behavior in `agent.config.ts`:
+### Usage Examples
 
 ```typescript
-export const config = {
-  provider: 'anthropic',
-  model: 'claude-sonnet-4',
-  temperature: 0.7,
-  maxTokens: 4000,
-};
+import {
+  ResearchAgent,
+  CodeReviewAgent,
+  EmailDrafter,
+  SEOAuditor,
+  BugTriager,
+  DataAnalyst,
+} from '@agentos/agents';
+
+// Research a topic
+const report = await ResearchAgent.run('AI agent frameworks comparison 2026');
+
+// Review code
+const review = await CodeReviewAgent.run('./src/auth.ts');
+
+// Draft an email
+const email = await EmailDrafter.run(
+  'Follow-up email to an investor after a demo call, casual tone'
+);
+
+// Audit SEO
+const seo = await SEOAuditor.run('https://mysite.com');
+
+// Triage a bug
+const triage = await BugTriager.run(
+  'Login page crashes on Safari when clicking Forgot Password'
+);
+
+// Analyze data
+const analysis = await DataAnalyst.run('./sales-data.csv');
 ```
 
-## 📊 Dev Server Features
+### Result Shape
 
-The dev server provides real-time insights into agent execution:
-
-### Execution Viewer
-Watch agents think and act in real-time:
-- See tool calls as they happen
-- View reasoning steps
-- Track token usage and costs
-- Monitor performance
-
-### Tool Inspector
-Debug tool calls with detailed views:
-- Input parameters
-- Output results
-- Execution time
-- Error messages
-
-### History
-Browse past executions:
-- Filter by agent or status
-- Compare different runs
-- Export execution data
-
-## 🧪 Testing (Coming in Phase 3)
+Every agent returns an `AgentResult`:
 
 ```typescript
-import { test, expect } from '@agent-platform/testing';
+const result = await ResearchAgent.run('...');
 
-test('research agent finds information', async () => {
-  const result = await runAgent('research-agent', {
-    input: 'AI trends',
-    mock: {
-      'web-search': {
-        return: [/* mock results */]
-      }
-    }
-  });
+result.output       // string — the agent's final response
+result.success      // boolean — whether it completed successfully
+result.toolCalls    // array — tools used during execution
+result.tokensUsed   // { input, output, total }
+result.cost         // number — estimated cost in USD
+result.duration     // number — execution time in ms
+result.loops        // number — agentic loop iterations
+```
 
-  expect(result.usedTools).toContain('web-search');
-  expect(result.status).toBe('success');
+## Build Your Own
+
+```typescript
+import { createAgent } from '@agentos/agents';
+
+// From a plain English description
+const agent = await createAgent(
+  'An agent that monitors tech news and summarizes the top stories'
+);
+const summary = await agent.run('What happened in tech today?');
+
+// From a structured spec
+const agent = await createAgent({
+  task: 'Analyze GitHub repositories',
+  inputs: 'Repository URL or name',
+  outputs: 'Report with stars, issues, activity metrics',
+  tools: ['web_search', 'web_scrape'],
 });
 ```
 
-## 🏗️ Architecture
+## Streaming
 
-Agent Platform is built as a monorepo with the following packages:
+```typescript
+import { Agent } from '@agentos/agents';
 
-- **@agent-platform/core**: Agent runtime and types
-- **@agent-platform/cli**: Command-line interface
-- **@agent-platform/dev-server**: Development server
-- **@agent-platform/templates**: Production agent templates
-- **@agent-platform/ui**: Shared UI components
+const agent = new Agent({
+  instructions: 'You are a helpful assistant.',
+  tools: [],
+});
 
-## 🎯 Roadmap
+for await (const event of agent.stream('Tell me about TypeScript')) {
+  if (event.type === 'text_delta') {
+    process.stdout.write(event.delta ?? '');
+  }
+  if (event.type === 'tool_start') {
+    console.log(`\nUsing tool: ${event.tool}`);
+  }
+  if (event.type === 'done') {
+    console.log(`\nCost: $${event.finalResult?.cost}`);
+  }
+}
+```
 
-### ✅ Phase 0-1: Foundation (Current)
-- [x] Monorepo setup
-- [x] Core runtime
-- [x] CLI with init, run, list commands
-- [x] High-quality agent templates
-
-### 🚧 Phase 2: Dev Server (Next)
-- [ ] Real-time execution viewer
-- [ ] Tool call inspector
-- [ ] WebSocket events
-- [ ] Beautiful Tailwind UI
-
-### 📋 Phase 3: Testing
-- [ ] Agent testing framework
-- [ ] Mock system for tools
-- [ ] Assertion library
-- [ ] CI/CD integration
-
-### 🌐 Phase 4: Marketplace
-- [ ] Agent publishing
-- [ ] Community templates
-- [ ] Version control
-- [ ] Discovery and search
-
-### 🎨 Phase 5: Visual Builder
-- [ ] Drag-and-drop flow designer
-- [ ] Code generation
-- [ ] Two-way sync
-
-### 🚀 Phase 6: Production
-- [ ] One-command deployment
-- [ ] Multi-platform support
-- [ ] Monitoring and analytics
-- [ ] Managed cloud service
-
-## 💻 Development
-
-### Prerequisites
-- Node.js >= 18
-- pnpm >= 8
-
-### Setup
+## CLI
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/agent-platform.git
-cd agent-platform
+npx agentos list              # See all 8 available agents
+npx agentos try research      # Try an agent interactively
+npx agentos try email         # Try the email drafter
+npx agentos create            # Build a custom agent via prompts
+npx agentos init my-project   # Scaffold a new project
+```
 
-# Install dependencies
+## Configuration
+
+```typescript
+import { configure } from '@agentos/agents';
+
+configure({
+  oauthToken: '...',            // Claude Max/Pro plan OAuth token
+  apiKey: '...',                // Or Anthropic API key
+  baseUrl: '...',               // Custom API endpoint (proxy support)
+  defaultModel: 'claude-sonnet-4-6',
+  maxLoops: 10,                 // Global loop limit
+  maxSpendPerRun: 1.00,         // Circuit breaker: max $ per agent run
+  maxConcurrentRuns: 5,         // Limit concurrent agent executions
+  verbose: true,                // Enable debug logging
+});
+```
+
+Set `BRAVE_SEARCH_API_KEY` for better web search results (falls back to DuckDuckGo if not set).
+
+## Safety Features
+
+- **Spend limits** — Circuit breaker stops agents that exceed cost threshold (default: $1/run)
+- **Loop limits** — Prevents runaway agent loops (configurable per agent)
+- **Tool timeouts** — 30-second timeout on tool execution
+- **Rate limit retry** — Automatic exponential backoff on 429/529 errors
+- **Concurrency control** — Limit how many agents run simultaneously
+
+## How It Works
+
+AgentOS wraps the Anthropic Claude SDK internally. Each pre-built agent is a curated combination of:
+
+- **System prompt** refined for reliable, high-quality outputs
+- **Tool integrations** (web search, scraping, file reading) with error handling and content parsing
+- **Safety controls** (loop limits, cost tracking, spend caps, timeouts)
+
+You get the results. We handle the complexity.
+
+## Architecture
+
+```
+@agentos/agents (the library)
+├── 8 pre-built agents with curated prompts
+├── Agent base class (agentic tool-use loop)
+├── Tool implementations (web search, scrape, file ops)
+├── Auth resolution (OAuth token / API key / proxy)
+└── Safety layer (spend limits, retries, timeouts)
+
+@agentos/cli (the CLI)
+├── list — browse available agents
+├── try  — run agents interactively
+├── create — build custom agents via chat
+└── init — scaffold new projects
+```
+
+Internally uses the Anthropic SDK. Not a framework — a library of ready-to-use agents.
+
+## Development
+
+```bash
 pnpm install
-
-# Build all packages
 pnpm build
-
-# Run in development mode
-pnpm dev
+pnpm test         # 70 tests across 7 suites
 ```
 
-### Project Structure
+## License
 
-```
-agent-platform/
-├── packages/
-│   ├── core/           # Agent runtime
-│   ├── cli/            # CLI tool
-│   ├── dev-server/     # Dev server (Phase 2)
-│   ├── templates/      # Agent templates
-│   └── ui/             # UI components (Phase 2)
-├── docs/               # Documentation
-└── examples/           # Example projects
-```
-
-## 🤝 Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) for details.
-
-## 🙏 Acknowledgments
-
-Built with:
-- [oclif](https://oclif.io/) - CLI framework
-- [TypeScript](https://www.typescriptlang.org/)
-- [Anthropic Claude](https://www.anthropic.com/)
-- [OpenAI](https://openai.com/)
-
-## 📞 Support
-
-- 📖 [Documentation](https://agent-platform.dev/docs)
-- 💬 [Discord Community](https://discord.gg/agent-platform)
-- 🐛 [Issue Tracker](https://github.com/yourusername/agent-platform/issues)
-- 🐦 [Twitter](https://twitter.com/agent_platform)
-
----
-
-**Ready to build something amazing? Start with `agent init` and let's go! 🚀**
+MIT

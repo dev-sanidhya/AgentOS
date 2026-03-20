@@ -1,40 +1,49 @@
 {
-  "name": "@agent-platform/cli",
+  "name": "@agentos/cli",
   "version": "0.1.0",
-  "description": "CLI tool for Agent Platform",
+  "description": "CLI for AgentOS - try, build, and manage AI agents",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "agent": "./bin/run.js"
+    "agentos": "./bin/run.js"
   },
+  "files": [
+    "dist",
+    "bin",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
     "clean": "rm -rf dist",
-    "test": "jest"
+    "test": "echo 'CLI tests run via workspace root'"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "cli",
+    "agentos",
+    "claude"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dev-sanidhya/AgentOS"
   },
   "dependencies": {
-    "@agent-platform/core": "workspace:*",
-    "@agent-platform/templates": "workspace:*",
-    "@oclif/core": "^3.15.1",
-    "@oclif/plugin-help": "^6.0.9",
+    "@agentos/agents": "workspace:*",
     "chalk": "^4.1.2",
-    "inquirer": "^8.2.5",
-    "ora": "^5.4.1",
-    "cosmiconfig": "^9.0.0",
+    "commander": "^12.0.0",
     "dotenv": "^16.4.1",
-    "ts-node": "^10.9.2"
+    "inquirer": "^8.2.5",
+    "ora": "^5.4.1"
   },
   "devDependencies": {
     "@types/inquirer": "^8.2.10",
     "@types/node": "^20.11.0",
     "typescript": "^5.3.3"
   },
-  "oclif": {
-    "bin": "agent",
-    "dirname": "agent",
-    "commands": "./dist/commands",
-    "topicSeparator": " ",
-    "topics": {}
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

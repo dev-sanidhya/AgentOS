@@ -1,8 +1,8 @@
 {
-  "name": "agent-platform",
+  "name": "agentos",
   "version": "0.1.0",
   "private": true,
-  "description": "AI Agent Development Platform - CLI, Dev Server, and Runtime",
+  "description": "Pre-built AI agents you can import and use in one line",
   "workspaces": [
     "packages/*"
   ],
@@ -10,14 +10,17 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "test": "turbo run test",
-    "lint": "turbo run lint",
-    "clean": "turbo run clean && rm -rf node_modules",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
+    "clean": "turbo run clean && rm -rf node_modules"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.11.0",
+    "dotenv": "^16.6.1",
+    "jest": "^30.3.0",
     "prettier": "^3.2.4",
+    "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "turbo": "^1.12.4",
     "typescript": "^5.3.3"
   },

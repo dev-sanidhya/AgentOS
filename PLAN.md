@@ -1,942 +1,245 @@
-# 🎯 Agent Library & Runtime Platform - Master Plan
+# AgentOS — Product & Architecture Plan
 
-## **Project Vision**
+## What AgentOS Is
 
-Build the **ultimate AI agent toolkit** that combines:
+**One-liner:** Pre-built AI agents you can import and use in one line. No AI knowledge required.
 
-1. **Code Library** (like shadcn) - Copy production-ready agent code into your workspace
-2. **Runtime & Dev Tools** - Run, test, and debug agents with beautiful tooling
+AgentOS is a library of production-ready AI agents that anyone can import into their project. It targets the non-technical "vibe coder" audience — people who want to use AI agents but don't have the know-how to build them from scratch.
 
-**Core Philosophy:**
+The original analogy: **shadcn, but for agents.**
 
-- 🎨 **Copy & Customize** - Get agent code you can modify (`agent add`)
-- ⚡ **Run & Test** - Execute agents instantly (`agent run`)
-- 🔧 **Framework Flexible** - Works standalone OR with LangChain/CrewAI
-- 💎 **Production Ready** - High-quality templates with best practices
-- 🌐 **Beautiful Tools** - Dev server with observability
+## How This Differs From the Original Codebase
 
-**The Best of Both Worlds:**
+The original AgentOS repo had:
 
-1. Want to integrate with your existing system? → **Copy the code**
-2. Want to prototype quickly? → **Run it directly**
-3. Want to debug agent behavior? → **Use the dev server**
+| Original Setup | Problem |
+|---|---|
+| Custom `AgentRuntime` execution engine | Reinventing the wheel — competing with LangChain, CrewAI, etc. |
+| 5 template agents with simulated/fake outputs | Not real agents — just scaffolding |
+| Multi-framework support (LangChain, CrewAI, 14 variants) | Too scattered — supporting everything means building nothing |
+| CLI focused on scaffolding (`agent add`, `project init`) | Copy-paste workflow, not import-and-use |
+| Event system for observability | Only worked for agents built on AgentOS's own runtime |
+| No actual API calls or real LLM integration | Couldn't actually do anything useful |
 
----
+### What Changed
 
-## 📋 **PHASE 0: Foundation & Setup** (Week 1) ✅
+| New Setup | Why |
+|---|---|
+| Built on **Claude Agent SDK** (`@anthropic-ai/claude-agent-sdk`) | No custom runtime. We use Anthropic's battle-tested agent infrastructure. |
+| 8 real agents with real tool access | WebSearch, WebFetch, Read, Glob, Grep, Bash — all via Claude Code |
+| **One framework only** — Claude Agent SDK | Focus beats breadth. |
+| Import-based usage (`import { ResearchAgent } from '@agentos/agents'`) | npm install + import, not copy-paste templates |
+| OAuth token support (Claude Max/Pro plan) | Users can run agents with their existing Claude subscription — no API billing needed |
 
-### Goals:
+## Architecture
 
-- Project architecture decision
-- Core tech stack setup
-- Initial project structure
+### The Core Decision: We Are NOT Building an Agent Framework
 
-### Deliverables:
+We don't compete with LangChain, CrewAI, or the Anthropic SDK. We're a **curated library on top of the Claude Agent SDK.** The SDK does the hard work (agent loops, tool calling, streaming, auth). We add:
 
-```
-✓ Monorepo structure with pnpm workspaces
-✓ CLI package setup with oclif
-✓ Core runtime package with types
-✓ Templates package structure
-✓ TypeScript configuration
-```
+1. **Pre-built, tested agent prompts** that work out of the box
+2. **Tool configuration** (which SDK tools each agent can access)
+3. **Cost controls** (max budget per run, concurrency limits)
+4. **Simple API surface** (`agent.run("query")` → result)
 
-### Tech Stack:
-
-**CLI:**
-
-- Language: TypeScript/Node.js
-- Framework: oclif
-- File operations: fs-extra, glob
-- Templating: Handlebars for customization
-
-**Runtime:**
-
-- Agent execution engine
-- Event system for observability
-- Tool registration system
-- Multi-provider support (OpenAI, Anthropic)
-
-**Templates:**
-
-- Multiple languages: Python, TypeScript, JavaScript
-- Multiple frameworks: LangChain, CrewAI, Raw
-- Standalone executable versions
-
-**Dev Server:**
-
-- Backend: Node.js + Fastify + WebSockets
-- Frontend: Next.js + React + Tailwind
-- Real-time execution viewer
-
-**Showcase Website:**
-
-- Next.js + React + Tailwind
-- Syntax highlighting with Shiki
-- Live code preview
-- Framework selector
-
-### File Structure:
+### How It Works Internally
 
 ```
-agent-platform/
-├── packages/
-│   ├── cli/                    # CLI tool
-│   ├── core/                   # Agent runtime
-│   ├── templates/              # Agent templates
-│   │   ├── research-agent/
-│   │   │   ├── runtime/        # For 'agent run'
-│   │   │   │   └── agent.ts
-│   │   │   ├── templates/      # For 'agent add'
-│   │   │   │   ├── langchain-python/
-│   │   │   │   ├── langchain-typescript/
-│   │   │   │   ├── crewai/
-│   │   │   │   └── raw-python/
-│   │   │   ├── manifest.json
-│   │   │   └── README.md
-│   │   └── code-review-agent/
-│   ├── dev-server/             # Development server
-│   └── ui/                     # Shared UI components
-├── website/                    # Showcase website
-└── docs/                       # Documentation
+User code:
+  import { ResearchAgent } from '@agentos/agents'
+  const result = await ResearchAgent.run("AI trends 2026")
+            │
+            ▼
+  Agent class (packages/agents/src/agent.ts)
+    - Builds system prompt from agent's instructions
+    - Configures allowedTools (WebSearch, WebFetch, etc.)
+    - Sets cost limits, max turns
+    - Passes OAuth token via environment
+            │
+            ▼
+  Claude Agent SDK (query() function)
+    - Spawns Claude Code as a subprocess
+    - Handles the full agentic loop
+    - Executes tools (search, read files, etc.)
+    - Returns streaming messages
+            │
+            ▼
+  Agent class processes the stream
+    - Collects text output, tool calls, costs
+    - Returns structured AgentResult
 ```
 
-**Status:** ✅ Complete
+### Authentication — Claude Max/Pro Plan via OAuth
 
----
-
-## 📋 **PHASE 1: MVP - Dual-Mode CLI** (Week 2-4) 🚧
-
-### Goals:
-
-Create CLI that can both RUN agents AND COPY templates
-
-### Core Commands:
-
-#### **1. Template Commands (Copy Code)**
-
-**`agent init [project-name]`** ✅ (needs enhancement)
-
-- Creates new agent project
-- Detects language preference (Python/TypeScript)
-- Sets up configuration
-- Includes example agents
-
-**`agent add <template-name>`** ❌ (needs building)
+From the [Divya Ranjan thread](https://x.com/divyaranjan_/status/2011468323742155069):
 
 ```bash
-# Interactive mode
-agent add research-agent
-? Choose framework: (LangChain Python, LangChain TypeScript, CrewAI, Raw Python)
-? Where to add files: ./agents/research
+# Step 1: Generate a 1-year OAuth token from your Claude subscription
+claude setup-token
 
-# Non-interactive
-agent add research-agent --framework=langchain --lang=python --path=./agents
+# Step 2: Set it in your environment
+export CLAUDE_CODE_OAUTH_TOKEN=sk-ant-oat01-...
 
-# What happens:
-✓ Detecting project type: Python
-✓ Copying template files to ./agents/research/
-
-  Added files:
-  ✓ agents/research/research_agent.py
-  ✓ agents/research/tools/web_search.py
-  ✓ agents/research/tools/web_scrape.py
-  ✓ agents/research/prompts.py
-  ✓ agents/research/example_usage.py
-  ✓ agents/research/README.md
-
-  Dependencies to install:
-  - langchain>=0.1.0
-  - requests>=2.31.0
-  - beautifulsoup4>=4.12.0
-
-  Run: pip install -r agents/research/requirements.txt
-
-  Quick start:
-  python agents/research/example_usage.py
+# Step 3: Use AgentOS — no API key, no billing
 ```
 
-**`agent list [--mode=templates|installed]`** ✅ (needs enhancement)
+The OAuth token is passed to the Claude Agent SDK subprocess via environment variables. The SDK handles authentication with Anthropic's servers using the user's existing Claude subscription.
 
-- Lists available templates for `add`
-- Lists installed agents (copied to workspace)
-- Shows agent compatibility and requirements
+**Priority order for auth resolution:**
+1. `CLAUDE_CODE_OAUTH_TOKEN` (Max/Pro plan — recommended)
+2. `oauthToken` in configure()
+3. `AGENTOS_API_KEY` (future proxy)
+4. `ANTHROPIC_API_KEY` (standard API billing)
+5. `apiKey` in configure()
 
-**`agent diff <template-name>`** ❌ (new)
+## Business Model
 
-- Preview files before adding
-- Show what will be created/modified
+### The Proxy Play (Future — Path B)
 
-**`agent remove <agent-name>`** ❌ (new)
-
-- Remove agent files from workspace
-- Interactive confirmation
-
-**`agent update <agent-name>`** ❌ (new)
-
-- Update agent to latest version
-- Show diff of changes
-- Preserve user modifications
-
-#### **2. Runtime Commands (Execute Agents)**
-
-**`agent run <agent-name>`** ✅ (already built)
-
-```bash
-# Run agent from workspace
-agent run research-agent --input "AI trends 2026"
-
-# Run with verbose logging
-agent run research-agent -i "query" --verbose
-
-# Run with JSON output
-agent run research-agent -i "query" --json
-```
-
-**`agent dev`** ❌ (Phase 2)
-
-```bash
-# Starts development server
-agent dev
-
-# Features:
-# - Real-time execution viewer
-# - Tool call inspector
-# - Token usage tracking
-# - Execution history
-```
-
-**`agent test [agent-name]`** ❌ (Phase 3)
-
-```bash
-# Run agent tests
-agent test research-agent
-```
-
-### Template Structure:
-
-Each agent has **TWO versions**:
-
-```
-research-agent/
-├── manifest.json              # Metadata for discovery
-├── README.md                  # Agent documentation
-│
-├── runtime/                   # For 'agent run' (immediate execution)
-│   ├── agent.ts              # Runtime-ready TypeScript
-│   ├── tools.ts
-│   └── prompts.ts
-│
-├── templates/                 # For 'agent add' (copy to workspace)
-│   ├── langchain-python/      # LangChain Python version
-│   │   ├── {{agent_name}}.py
-│   │   ├── tools/
-│   │   │   ├── web_search.py
-│   │   │   └── web_scrape.py
-│   │   ├── prompts.py
-│   │   ├── requirements.txt
-│   │   ├── example_usage.py
-│   │   └── README.md
-│   │
-│   ├── langchain-typescript/  # LangChain TypeScript version
-│   │   ├── {{agentName}}.ts
-│   │   ├── tools/
-│   │   ├── prompts.ts
-│   │   ├── package.json
-│   │   ├── example.ts
-│   │   └── README.md
-│   │
-│   ├── crewai/                # CrewAI version
-│   │   ├── {{agent_name}}_agent.py
-│   │   ├── tools.py
-│   │   ├── crew_config.yaml
-│   │   └── README.md
-│   │
-│   └── raw-python/            # Framework-agnostic Python
-│       ├── {{agent_name}}.py
-│       ├── requirements.txt
-│       ├── example.py
-│       └── README.md
-│
-└── examples/
-    ├── use-case-1.md
-    └── use-case-2.md
-```
-
-### manifest.json Format:
-
-```json
-{
-  "name": "research-agent",
-  "version": "1.0.0",
-  "description": "AI-powered research agent with web search and content analysis",
-  "author": "Agent Platform",
-  "license": "MIT",
-  "tags": ["research", "web-search", "analysis", "scraping"],
-
-  "capabilities": {
-    "tools": ["web-search", "web-scrape", "http-request"],
-    "useCases": ["market-research", "competitor-analysis", "fact-checking"]
-  },
-
-  "runtime": {
-    "entry": "runtime/agent.ts",
-    "executable": true
-  },
-
-  "templates": {
-    "frameworks": ["langchain", "crewai", "raw"],
-    "languages": ["python", "typescript"],
-
-    "variants": {
-      "langchain-python": {
-        "path": "templates/langchain-python",
-        "language": "python",
-        "framework": "langchain",
-        "dependencies": {
-          "python": ">=3.9",
-          "packages": ["langchain>=0.1.0", "requests", "beautifulsoup4"]
-        },
-        "files": {
-          "agent": "{{agent_name}}.py",
-          "tools": "tools/",
-          "example": "example_usage.py"
-        }
-      },
-
-      "langchain-typescript": {
-        "path": "templates/langchain-typescript",
-        "language": "typescript",
-        "framework": "langchain",
-        "dependencies": {
-          "node": ">=18",
-          "packages": {
-            "langchain": "^0.1.0",
-            "axios": "^1.6.0",
-            "cheerio": "^1.0.0"
-          }
-        }
-      }
-    }
-  },
-
-  "examples": [
-    {
-      "title": "Market Research",
-      "description": "Research competitors in a specific market",
-      "input": "Research top 5 AI coding assistants",
-      "expectedOutput": "Comprehensive research report with sources"
-    },
-    {
-      "title": "Fact Checking",
-      "description": "Verify claims with web sources",
-      "input": "Verify: 'Python is the most popular programming language'",
-      "expectedOutput": "Analysis with supporting evidence"
-    }
-  ]
-}
-```
-
-### Agent Templates to Build:
-
-**1. Research Agent** 🔍
-
-- Runtime version for `agent run`
-- Templates for: LangChain (Py/TS), CrewAI, Raw
-- Tools: web search, scraping, summarization
-- Status: ✅ Runtime built, ❌ Templates needed
-
-**2. Code Review Agent** 🔧
-
-- Runtime version for `agent run`
-- Templates for: LangChain (Py/TS), Raw
-- Tools: file reading, static analysis
-- Status: ✅ Runtime built, ❌ Templates needed
-
-**3. Data Analysis Agent** 📊
-
-- Runtime version for `agent run`
-- Templates for: LangChain (Py), Raw
-- Tools: CSV/JSON parsing, pandas, plotting
-- Status: ❌ Not started
-
-### Deliverables:
-
-- ✅ CLI with `init`, `run`, `list` commands
-- 🚧 Add `agent add` command with template copying
-- ❌ Add `agent diff`, `agent remove`, `agent update`
-- ✅ Runtime execution engine
-- ✅ 2 runtime agents (research, code-review)
-- ❌ Multi-framework templates for each agent
-- ❌ Template variable substitution
-- ❌ Dependency installation helpers
-
-**Current Status:** 40% Complete
-
----
-
-## 📋 **PHASE 2: Dev Server with Observability** (Week 5-6)
-
-### Goals:
-
-Local development server for running and debugging agents
-
-### Features:
-
-**1. Launch Dev Server:**
-
-```bash
-agent dev
-# Starts on localhost:3000
-# Opens browser with agent dashboard
-```
-
-**2. Dashboard Features:**
-
-- **Agent Library** - All available agents (runtime + workspace)
-- **Execution Playground** - Run agents with inputs
-- **Live Execution Viewer** - Real-time step-by-step view
-- **Tool Call Inspector** - See every tool call with I/O
-- **Token Usage Tracker** - Cost per run
-- **Execution History** - Past runs with replay
-- **Agent Editor** - Edit agent code inline (optional)
-
-**3. Real-time Execution View:**
-
-```
-┌─────────────────────────────────────────────┐
-│ Research Agent - RUNNING                    │
-├─────────────────────────────────────────────┤
-│ Input: "Latest AI agent frameworks 2026"    │
-│                                             │
-│ Step 1: Planning                            │
-│ ✓ Analyzing query...                        │
-│ ✓ Generated 3 search queries                │
-│                                             │
-│ Step 2: Web Search [Tool Call]              │
-│ → web_search("AI agent frameworks 2026")    │
-│ ← Found 10 results (250ms)                  │
-│                                             │
-│ Step 3: Content Extraction                  │
-│ → web_scrape("https://...")                 │
-│ ← Extracted 5000 chars (1.2s)               │
-│                                             │
-│ Step 4: Analysis                            │
-│ • Processing articles...                    │
-│ • Extracting key insights...                │
-│ • Generating report...                      │
-│                                             │
-│ Status: ✓ Complete                          │
-│ Tokens: 1,234 | Cost: $0.02 | Time: 8.5s   │
-└─────────────────────────────────────────────┘
-```
-
-**4. Tool Call Inspector:**
+Right now, users bring their own auth (OAuth token or API key). The future monetization path:
 
 ```typescript
-{
-  toolName: "web_search",
-  timestamp: "2026-03-19T10:30:45",
-  input: {
-    query: "AI agent frameworks 2026",
-    maxResults: 10
-  },
-  output: {
-    results: [
-      { title: "...", url: "...", snippet: "..." }
-    ],
-    totalResults: 10
-  },
-  duration: 250,
-  success: true
-}
+// Future: One key for everything
+configure({ agentosKey: process.env.AGENTOS_API_KEY });
 ```
 
-### Technical Architecture:
+**How it works:**
+- User gets one API key from AgentOS
+- We proxy to Anthropic (and future providers)
+- We add a margin on usage
+- User doesn't deal with multiple API providers
 
-**Backend:**
+**Why vibe coders will pay:**
+- One key instead of managing 5 different API accounts
+- Built-in spend limits and usage dashboards
+- No surprise bills — we handle rate limiting and cost controls
 
-```typescript
-dev-server/
-├── server.ts              # Fastify + WebSocket server
-├── agent-runner.ts        # Execute agents with event hooks
-├── storage.ts             # SQLite for history
-└── api/
-    ├── agents.ts          # List/run agents
-    ├── executions.ts      # Execution history
-    ├── templates.ts       # Available templates
-    └── workspace.ts       # User's workspace agents
-```
+**Revenue model:** Usage-based with a markup (e.g., 20-30% on top of Anthropic's pricing), or tiered subscription with included credits.
 
-**Frontend:**
+### Why This Is Defensible
 
-```typescript
-ui/
-├── app/
-│   ├── page.tsx                  # Dashboard
-│   ├── playground/page.tsx       # Run agents
-│   ├── history/page.tsx          # Execution history
-│   └── execution/[id]/page.tsx   # Execution detail
-├── components/
-│   ├── AgentList.tsx
-│   ├── ExecutionViewer.tsx
-│   ├── ToolCallInspector.tsx
-│   ├── TokenTracker.tsx
-│   └── CodeEditor.tsx            # Monaco editor
-└── hooks/
-    └── useAgentExecution.ts      # WebSocket connection
-```
+The agent code itself is simple (~30 lines per agent). The moat is in:
 
-**WebSocket Events:**
+1. **Tool integrations that just work** — The Claude Agent SDK gives us WebSearch, WebFetch, file operations, code execution out of the box. Users don't configure anything.
+2. **Curated, tested prompts** — Each agent's system prompt has been refined for quality output. A ResearchAgent that returns garbage isn't useful even if it's easy to import.
+3. **The proxy/billing abstraction** — Once users are on our proxy, switching cost is real.
+4. **The library effect** — More agents = more value. Network effects as community contributes agents.
 
-```typescript
-ws.on('agent:start')
-ws.on('agent:thinking')
-ws.on('agent:tool_call')
-ws.on('agent:tool_result')
-ws.on('agent:step_complete')
-ws.on('agent:response')
-ws.on('agent:complete')
-ws.on('agent:error')
-```
+## Product Scope
 
-### Deliverables:
+### What Ships Now (MVP)
 
-- ❌ Dev server with WebSocket support
-- ❌ Real-time execution viewer UI
-- ❌ Tool call inspector
-- ❌ Execution history with SQLite
-- ❌ Token/cost tracking
-- ❌ Beautiful Tailwind dashboard
-- ❌ Agent playground interface
+| Component | Status |
+|---|---|
+| `@agentos/agents` npm package | Built — 8 pre-built agents |
+| Claude Agent SDK integration | Built — uses `query()` from SDK |
+| OAuth token auth | Built — Claude Max/Pro plan support |
+| Cost controls | Built — max budget per run, concurrency limits |
+| Agent builder (`createAgent()`) | Built — create custom agents from description |
+| CLI (`agentos try`, `agentos list`, `agentos create`, `agentos init`) | Built |
+| Unit tests | 76 tests passing |
 
-**Status:** 0% Complete
+### Pre-Built Agents
 
----
+| Agent | Tools | Use Case |
+|---|---|---|
+| `ResearchAgent` | WebSearch, WebFetch, Read | Multi-source research reports with citations |
+| `CodeReviewAgent` | Read, Glob, Grep | Actionable code reviews (security, quality, performance) |
+| `ContentWriter` | WebSearch, WebFetch | Blog posts, docs, marketing copy, social media |
+| `DataAnalyst` | Read, Glob, Bash | CSV/JSON analysis with insights and recommendations |
+| `CompetitorAnalyzer` | WebSearch, WebFetch | Competitive landscape analysis |
+| `EmailDrafter` | None (pure text) | Professional email drafting |
+| `SEOAuditor` | WebSearch, WebFetch | Website SEO audits with prioritized fixes |
+| `BugTriager` | Read, Glob, Grep | Bug report classification and root cause analysis |
 
-## 📋 **PHASE 3: Showcase Website** (Week 7-9)
+### What Ships Next
 
-### Goals:
+| Feature | Priority |
+|---|---|
+| Streaming API (`agent.stream()`) | High — already implemented |
+| AgentOS proxy service (one API key) | High — monetization |
+| Dashboard (usage tracking, cost monitoring) | Medium |
+| More agents (20+ library) | Medium |
+| Community agent contributions | Medium |
+| Agent marketplace | Low — future |
 
-Beautiful website to showcase agents and templates
+## Is This Actually Useful?
 
-### Features:
+**Yes, for the right audience.** The target isn't senior engineers who can write their own agents in 30 lines. It's:
 
-**Homepage:**
+- **Vibe coders** who know enough JavaScript to import a package but not enough to understand tool-use protocols
+- **Product managers / founders** who want to prototype agent-powered features quickly
+- **Small teams** who don't want to spend a week learning LangChain
 
-- Hero: "Copy agent code OR run them instantly"
-- Dual showcase: Template library + Runtime platform
-- Live code preview
-- Quick start for both modes
-- GitHub stars, downloads counter
+**The value prop is not the code — it's the curation.** A `ResearchAgent` that reliably produces good reports with citations saves hours of prompt engineering and tool configuration.
 
-**Agent Gallery:**
+## Technical Decisions
 
-```
-/agents
+### Why Claude Agent SDK (not raw API calls)
 
-Grid of agent cards showing:
-- Visual icon
-- Name & description
-- Tags (research, code, data)
-- Framework badges
-- "Add to Project" button
-- "Try in Playground" button
-```
+| Approach | Pros | Cons |
+|---|---|---|
+| Raw Anthropic API (`messages.create`) | Full control, lighter weight | Must implement tool execution, agent loop, error handling yourself |
+| Claude Agent SDK (`query()`) | Built-in tool execution (WebSearch, file ops, code execution), battle-tested agent loop, OAuth support | Heavier (spawns subprocess), less control over individual steps |
 
-**Agent Detail Page:**
+We chose the SDK because:
+1. **Tool execution is free** — WebSearch, WebFetch, file operations all work out of the box. With raw API, we'd need to implement each tool ourselves.
+2. **OAuth support** — The SDK natively supports Claude Max/Pro plan tokens. Raw API doesn't.
+3. **The agent loop is handled** — Tool-use cycling, error recovery, context management — all handled by the SDK.
 
-```
-/agents/research-agent
+### Why Not LangChain / CrewAI / etc.
 
-Tabs:
-1. Overview
-   - Description
-   - Use cases
-   - Demo video/gif
+The original codebase tried to support multiple frameworks (LangChain Python, CrewAI, etc.). This was wrong because:
 
-2. Add to Project (Code Library)
-   - Framework selector (LangChain/CrewAI/Raw)
-   - Language selector (Python/TypeScript)
-   - Code preview with syntax highlighting
-   - Copy button
-   - Installation instructions
+1. **Maintenance nightmare** — 14 template variants, each with different bugs
+2. **No depth** — Supporting everything means excelling at nothing
+3. **Wrong abstraction** — Templates are copy-paste; imports are install-and-use
+4. **Claude Agent SDK is better for our use case** — It gives us real tool execution (web search, file reading, code execution) for free, which is the hardest part of making agents actually useful
 
-3. Try It (Runtime)
-   - Input field
-   - Run button
-   - Live results
-   - "Install CLI to run locally"
-
-4. Documentation
-   - API reference
-   - Configuration options
-   - Tool descriptions
-   - Examples
-
-5. Community
-   - Ratings & reviews
-   - Download stats
-   - Related agents
-```
-
-**Interactive Code Preview:**
-
-```tsx
-<FrameworkSelector>
-  <Tab value="langchain-python">
-    <CodeBlock language="python">
-      {researchAgentLangChainPython}
-    </CodeBlock>
-  </Tab>
-
-  <Tab value="crewai">
-    <CodeBlock language="python">
-      {researchAgentCrewAI}
-    </CodeBlock>
-  </Tab>
-</FrameworkSelector>
-
-<CopyButton text={code} />
-<DownloadButton filename="research_agent.py" content={code} />
-```
-
-**Live Playground:**
-
-- Try agents in browser (integrates with dev server)
-- Fork and modify code
-- Share custom configurations
-
-### Technical Stack:
-
-- Next.js 14 with App Router
-- Tailwind CSS + Framer Motion
-- Shiki for syntax highlighting
-- React Flow for visualizations
-- RunKit for live code (optional)
-
-### Deliverables:
-
-- ❌ Beautiful homepage
-- ❌ Agent gallery with filters
-- ❌ Agent detail pages
-- ❌ Interactive code preview
-- ❌ Framework/language selector
-- ❌ Copy-to-clipboard
-- ❌ Live playground integration
-- ❌ Documentation pages
-- ❌ Mobile responsive design
-
-**Status:** 0% Complete
-
----
-
-## 📋 **PHASE 4: Agent Testing Framework** (Week 10-11)
-
-### Goals:
-
-Make agents testable and reliable
-
-### Features:
-
-**1. Test Command:**
+## Running the Project
 
 ```bash
-agent test                    # Run all tests
-agent test research-agent     # Test specific agent
-agent test --watch           # Watch mode
+# Install dependencies
+pnpm install
+
+# Build
+pnpm build
+
+# Run tests
+pnpm --filter @agentos/agents test
+
+# Set up auth (Claude Max/Pro plan)
+claude setup-token
+export CLAUDE_CODE_OAUTH_TOKEN=sk-ant-oat01-...
+
+# Try an agent
+npx agentos try research "AI trends in 2026"
 ```
 
-**2. Test Templates:**
-When you run `agent add research-agent`, also get test files:
+## File Structure
 
 ```
-agents/research/
-├── research_agent.py
-├── tools/
-├── __tests__/
-│   ├── test_research_agent.py
-│   ├── test_tools.py
-│   └── fixtures/
-│       └── mock_search_results.json
-└── README.md
+packages/
+  agents/
+    src/
+      agent.ts           # Base Agent class (wraps Claude Agent SDK)
+      config.ts           # Global config + auth resolution
+      types.ts            # TypeScript interfaces
+      create-agent.ts     # Custom agent builder
+      index.ts            # Public API exports
+      agents/             # Pre-built agents (8 agents)
+        research.ts
+        code-review.ts
+        content-writer.ts
+        data-analyst.ts
+        competitor-analyzer.ts
+        email-drafter.ts
+        seo-auditor.ts
+        bug-triager.ts
+      tools/              # Legacy tool implementations (kept for reference)
+      __tests__/          # 76 unit tests
+  cli/
+    src/
+      index.ts            # CLI entry point
+      commands/            # try-agent, create, init, list
 ```
-
-**3. Test Syntax:**
-
-```python
-# __tests__/test_research_agent.py
-from agent_platform.testing import test_agent, mock_tool, expect
-
-@test_agent("research_agent")
-def test_web_search_integration():
-    result = run_agent(
-        "research_agent",
-        input="AI trends 2026",
-        mocks={
-            "web_search": mock_tool(
-                return_value=load_fixture("mock_search_results.json")
-            )
-        }
-    )
-
-    expect(result.used_tools).to_contain("web_search")
-    expect(result.status).to_equal("success")
-    expect(result.output).to_contain("AI")
-    expect(result.token_count).to_be_less_than(5000)
-```
-
-**4. Evaluation Framework:**
-
-```python
-from agent_platform.testing import evaluate
-
-dataset = [
-    {"input": "Research X", "expected_tools": ["web_search"]},
-    {"input": "Research Y", "expected_tools": ["web_search", "web_scrape"]}
-]
-
-results = evaluate("research_agent", dataset)
-print(f"Pass rate: {results.pass_rate}%")
-```
-
-### Deliverables:
-
-- ❌ Testing framework package
-- ❌ `agent test` command
-- ❌ Mock system for tools
-- ❌ Assertion library
-- ❌ Test templates included with agents
-- ❌ Dataset evaluation
-- ❌ CI/CD examples
-
-**Status:** 0% Complete
-
----
-
-## 📋 **PHASE 5: Community & Marketplace** (Week 12-14)
-
-### Goals:
-
-Enable community contributions and discovery
-
-### Features:
-
-**1. Publishing:**
-
-```bash
-agent login
-agent publish ./my-custom-agent
-```
-
-**2. Discovery:**
-
-```bash
-agent search "customer support"
-agent info @username/support-agent
-agent add @username/support-agent
-```
-
-**3. Marketplace Website:**
-
-- Browse community agents
-- User profiles
-- Ratings & reviews
-- Download stats
-- Featured agents
-
-### Deliverables:
-
-- ❌ Publishing system
-- ❌ Marketplace API
-- ❌ Community discovery
-- ❌ Quality validation
-- ❌ Versioning system
-
-**Status:** 0% Complete
-
----
-
-## 📋 **PHASE 6: Visual Agent Builder** (Week 15-17)
-
-### Goals:
-
-Visual tool to design agents, export code or run directly
-
-### Features:
-
-```bash
-agent builder
-# Opens visual designer
-```
-
-- Drag-and-drop flow designer
-- Export to LangChain/CrewAI/Raw
-- OR save as runtime agent
-- Share flows as JSON
-
-### Deliverables:
-
-- ❌ Visual flow designer
-- ❌ Code generation
-- ❌ Runtime export
-- ❌ Flow sharing
-
-**Status:** 0% Complete
-
----
-
-## 📋 **PHASE 7: Advanced Features** (Week 18-20)
-
-### Features:
-
-- Multi-agent system templates
-- Integration templates (Slack, Discord, API)
-- Custom tool marketplace
-- Agent deployment helpers
-- Managed cloud service
-
-**Status:** 0% Complete
-
----
-
-## 🎯 **Success Metrics**
-
-### MVP Success (Phase 1-2):
-
-- [ ] 500 CLI installations
-- [ ] 100 templates copied via `agent add`
-- [ ] 50 agents run via `agent run`
-- [ ] 5 community agents
-
-### Growth Success (Phase 3-5):
-
-- [ ] 5,000 active developers
-- [ ] 100+ community agents
-- [ ] 50,000+ template installs
-- [ ] Featured on HackerNews
-
-### Long-term Success:
-
-- [ ] 50,000+ developers
-- [ ] 1,000+ community agents
-- [ ] "shadcn for agents" reputation
-
----
-
-## 💻 **Tech Stack Summary**
-
-| Component      | Technology                      |
-| -------------- | ------------------------------- |
-| CLI            | TypeScript + oclif + fs-extra   |
-| Runtime        | TypeScript + Event System       |
-| Templates      | Multi-language (Python, TS, JS) |
-| Dev Server     | Fastify + WebSockets + SQLite   |
-| Dashboard      | Next.js + React + Tailwind      |
-| Website        | Next.js + Tailwind + Shiki      |
-| Visual Builder | React Flow + Monaco             |
-| Marketplace    | Next.js + Postgres + S3         |
-
----
-
-## 📅 **Timeline Overview**
-
-- **Phase 0:** ✅ 1 week - Foundation (Complete)
-- **Phase 1:** 🚧 3 weeks - Dual-mode CLI (40% complete)
-- **Phase 2:** ❌ 2 weeks - Dev Server
-- **Phase 3:** ❌ 3 weeks - Showcase Website
-- **Phase 4:** ❌ 2 weeks - Testing
-- **Phase 5:** ❌ 3 weeks - Community
-- **Phase 6:** ❌ 3 weeks - Visual Builder
-- **Phase 7:** ❌ 3 weeks - Advanced
-- **Total:** ~20 weeks (5 months)
-
----
-
-## 📊 **Current Progress Summary**
-
-### ✅ **Completed (Phase 0 + Partial Phase 1)**
-
-**Phase 0: Foundation - 100%**
-
-- ✅ Monorepo structure with pnpm/turbo
-- ✅ CLI package with oclif
-- ✅ Core runtime package
-- ✅ Type system and interfaces
-- ✅ Templates package structure
-
-**Phase 1: Dual-Mode CLI - 40%**
-
-**Runtime Mode (Execute Agents):**
-
-- ✅ `agent init` - Create projects
-- ✅ `agent run` - Execute agents
-- ✅ `agent list` - List agents
-- ✅ AgentRuntime execution engine
-- ✅ Event system for observability
-- ✅ Tool registration system
-- ✅ 2 runtime agents:
-  - ✅ Research Agent (web search, scraping)
-  - ✅ Code Review Agent (file analysis, security)
-- ✅ Built-in tools:
-  - ✅ Web tools (search, scrape, HTTP)
-  - ✅ File tools (read, write, list, stats)
-
-**Template Mode (Copy Code):**
-
-- ❌ `agent add` command
-- ❌ Template copying system
-- ❌ Framework detection
-- ❌ Multi-framework templates
-- ❌ Variable substitution
-- ❌ Dependency helpers
-
-### ❌ **Not Started**
-
-- Phase 2: Dev Server (0%)
-- Phase 3: Showcase Website (0%)
-- Phase 4: Testing Framework (0%)
-- Phase 5: Community/Marketplace (0%)
-- Phase 6: Visual Builder (0%)
-- Phase 7: Advanced Features (0%)
-
----
-
-## 🚀 **Immediate Next Steps**
-
-**To Complete Phase 1:**
-
-1. Build `agent add` command
-2. Create multi-framework templates for:
-   - Research Agent (LangChain Py/TS, CrewAI, Raw)
-   - Code Review Agent (LangChain Py/TS, Raw)
-3. Implement template variable substitution
-4. Add framework/language detection
-5. Build `agent diff` and `agent update`
-
-**Then Move to Phase 2:**
-
-- Build dev server
-- Real-time execution viewer
-- Beautiful dashboard
-
----
-
-## 🔑 **Key Differentiators**
-
-1. **Dual Mode** - Copy code OR run instantly
-2. **Framework Flexible** - Works with any AI framework
-3. **High Quality** - Production-ready templates
-4. **Developer Tools** - Observability and debugging
-5. **Beautiful UX** - Great CLI and web experiences
-6. **Community Driven** - Easy contributions
-
----
-
-## 📝 **Notes**
-
-- **Both Runtime AND Library** - Best of both worlds
-- **Users Choose** - Copy code for full control, run for speed
-- **Quality First** - Better to have 10 great agents than 100 mediocre
-- **Framework Neutral** - Don't force users into our ecosystem
-- **Community First** - Make contributions easy
