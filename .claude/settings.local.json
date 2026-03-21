@@ -12,7 +12,9 @@
       "Bash(npm set:*)",
       "Bash(pnpm --filter @axiomcm/dashboard publish --access public --no-git-checks)",
       "Bash(pnpm --filter @axiomcm/cli publish --access public --no-git-checks)",
-      "Bash(npm info:*)"
+      "Bash(npm info:*)",
+      "WebFetch(domain:paperflow.k04.tech)",
+      "Bash(npx vercel:*)"
     ]
   }
 }

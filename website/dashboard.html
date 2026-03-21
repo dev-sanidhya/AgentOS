@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard — axiom</title>
+  <meta name="description" content="The axiom local dashboard — browse agents, inspect run history, and track cost. No account, no cloud, no setup." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="wordmark">axio<em>m</em></a>
+    <div class="nav-links">
+      <a href="agents.html">Agents</a>
+      <a href="docs.html">Docs</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="changelog.html">Changelog</a>
+    </div>
+    <button class="install-chip">
+      <span class="dollar">$</span> npm i -g @axiomcm/cli <span style="opacity:.5;">⎘</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" style="padding: 96px 0 80px;">
+  <div class="hero-inner">
+    <div class="eyebrow">
+      <span class="dot"></span>
+      Runs locally — no cloud, no account
+    </div>
+    <h1>Your agents.<br>Your data.<br><em>Locally.</em></h1>
+    <p class="hero-sub">
+      The axiom dashboard is a local web app that lives entirely on your machine.
+      Browse agents, trigger runs, and inspect every result — all from your browser.
+    </p>
+    <div class="hero-actions">
+      <div class="terminal-block">
+        <span class="prompt">$</span>
+        axiom dashboard
+        <span style="color:rgba(247,240,227,0.4); margin-left:8px;">→ http://127.0.0.1:3210</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Screenshot -->
+<section class="section section-alt" style="padding-top: 64px;">
+  <div class="container">
+    <div class="screenshot-wrap" style="margin-top:0; aspect-ratio:16/9; overflow:hidden;">
+      <img
+        src="assets/dashboard.svg"
+        alt="axiom dashboard UI"
+        loading="lazy"
+        style="width:100%; height:100%; object-fit:cover; display:block;"
+      />
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="section">
+  <div class="container">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything in one view</h2>
+    <p class="section-sub">Two panels. No noise. Agent catalog on the left, run history on the right.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🗂</div>
+        <h3>Agent Catalog</h3>
+        <p>Every built-in agent and any custom agents you've created in <code class="inline-code">.axiom/agents/</code> — filterable by kind and category. Select one, type your input, hit Run.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3>Run History</h3>
+        <p>Every persisted run is listed with timestamp, agent name, status, cost, token count, and duration. Filter by success/error or date range.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Run Detail Inspector</h3>
+        <p>Click any run to see the full input, output, auth mode, loop count, and every tool call made during execution — displayed as formatted JSON.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💸</div>
+        <h3>Cost Tracking</h3>
+        <p>See the exact USD cost for every run so you're never surprised by your Anthropic bill. Token usage is broken down per run.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Fully Local</h3>
+        <p>No cloud. No account. No telemetry. Everything is read from and written to your local <code class="inline-code">.axiom/</code> directory. The server binds to <code class="inline-code">127.0.0.1</code> only.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Zero Setup</h3>
+        <p>One command and it opens. No Docker, no database, no environment config beyond your Anthropic key. Works on Mac, Linux, and Windows.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How to open -->
+<section class="section section-alt">
+  <div class="container" style="max-width: 760px;">
+    <div class="section-label">Open it now</div>
+    <h2 class="section-title">Three steps to your first run</h2>
+
+    <div class="steps" style="margin-top: 36px;">
+      <div class="step">
+        <div class="step-num">Step 01</div>
+        <h3>Install axiom</h3>
+        <p>If you haven't already, install the global CLI.</p>
+        <code class="step-code"><span class="p">$</span> npm i -g @axiomcm/cli</code>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 02</div>
+        <h3>Set your key</h3>
+        <p>Export your Anthropic API key in your terminal.</p>
+        <code class="step-code"><span class="p">$</span> export ANTHROPIC_API_KEY=sk-ant-...</code>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 03</div>
+        <h3>Open the dashboard</h3>
+        <p>Run this anywhere. It opens in your browser instantly.</p>
+        <code class="step-code"><span class="p">$</span> axiom dashboard</code>
+      </div>
+    </div>
+
+    <div style="margin-top: 40px; display: flex; gap: 12px; flex-wrap: wrap;">
+      <a href="docs.html#dashboard" class="btn btn-outline">Read the docs →</a>
+      <a href="agents.html" class="btn btn-outline">Browse the agent catalog →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="index.html" class="wordmark" style="font-size:18px;">axio<em>m</em></a>
+    <div class="footer-links">
+      <a href="https://www.npmjs.com/org/axiomcm" target="_blank">npm</a>
+      <a href="agents.html">Agents</a>
+      <a href="docs.html">Docs</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="changelog.html">Changelog</a>
+    </div>
+    <div class="footer-right">Made with ☕ &nbsp;·&nbsp; MIT &nbsp;·&nbsp; © axiom 2026</div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

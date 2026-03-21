@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Docs — axiom</title>
+  <meta name="description" content="axiom documentation — installation, CLI commands, built-in agents, custom agents, dashboard, and programmatic usage." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="wordmark">axio<em>m</em></a>
+    <div class="nav-links">
+      <a href="agents.html">Agents</a>
+      <a href="docs.html">Docs</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="changelog.html">Changelog</a>
+    </div>
+    <button class="install-chip">
+      <span class="dollar">$</span> npm i -g @axiomcm/cli <span style="opacity:.5;">⎘</span>
+    </button>
+  </div>
+</nav>
+
+<div class="docs-layout">
+
+  <!-- ─── Sidebar ─── -->
+  <aside class="docs-sidebar">
+    <div class="sidebar-group">
+      <div class="sidebar-group-label">Getting Started</div>
+      <a href="#overview">What is axiom?</a>
+      <a href="#installation">Installation</a>
+      <a href="#authentication">Authentication</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-label">CLI Reference</div>
+      <a href="#commands">All commands</a>
+      <a href="#axiom-list">axiom list</a>
+      <a href="#axiom-try">axiom try</a>
+      <a href="#axiom-dashboard">axiom dashboard</a>
+      <a href="#axiom-create">axiom create</a>
+      <a href="#axiom-init">axiom init</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-label">Agents</div>
+      <a href="#built-in-agents">Built-in agents</a>
+      <a href="#custom-agents">Custom agents</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-group-label">Advanced</div>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#programmatic">Programmatic usage</a>
+      <a href="#configuration">Configuration</a>
+    </div>
+  </aside>
+
+  <!-- ─── Content ─── -->
+  <main class="docs-content">
+
+    <div class="docs-section" id="overview">
+      <h2>What is axiom?</h2>
+      <p>axiom is an open-source CLI and Node.js library that gives you a catalog of production-ready AI agents — for research, writing, code review, analysis, and more — that you can run from your terminal or import directly into your project.</p>
+      <p>It's built on top of the <strong>Anthropic Claude Agent SDK</strong> and works with your own Anthropic API key (BYOK). No proxy, no account required for v1.</p>
+      <p>axiom is made of three packages:</p>
+      <ul>
+        <li><code class="inline-code">@axiomcm/cli</code> — the global <code class="inline-code">axiom</code> command you install and run in any terminal</li>
+        <li><code class="inline-code">@axiomcm/agents</code> — the agent SDK, importable into any Node.js app</li>
+        <li><code class="inline-code">@axiomcm/dashboard</code> — the local web dashboard server</li>
+      </ul>
+      <div class="callout">
+        <strong>v2 coming soon:</strong> A managed proxy tier — pay a flat monthly rate and run agents without your own Anthropic key. <a href="index.html#waitlist">Join the waitlist →</a>
+      </div>
+    </div>
+
+    <div class="docs-section" id="installation">
+      <h2>Installation</h2>
+      <p>Install the axiom CLI globally with npm, pnpm, or yarn. Requires <strong>Node.js 18+</strong>.</p>
+      <div class="code-block"><span class="p">$</span> npm install -g @axiomcm/cli</div>
+      <div class="code-block"><span class="p">$</span> pnpm add -g @axiomcm/cli</div>
+      <p>Verify the installation:</p>
+      <div class="code-block"><span class="p">$</span> axiom --version
+<span class="cm">0.1.0</span>
+
+<span class="p">$</span> axiom --help</div>
+
+      <h3>Using the SDK directly</h3>
+      <p>If you want to import agents into your own Node.js project rather than using the CLI:</p>
+      <div class="code-block"><span class="p">$</span> npm install @axiomcm/agents</div>
+    </div>
+
+    <div class="docs-section" id="authentication">
+      <h2>Authentication</h2>
+      <p>axiom uses your own Anthropic key to call Claude. There are two supported methods — use whichever you have access to.</p>
+
+      <h3>Option A — Anthropic API Key (recommended)</h3>
+      <p>Get your key from <strong>console.anthropic.com</strong>. Set it as an environment variable:</p>
+      <div class="code-block"><span class="cm"># In your shell profile (.bashrc, .zshrc) or .env file</span>
+<span class="kw">export</span> ANTHROPIC_API_KEY=<span class="str">sk-ant-api03-...</span></div>
+
+      <h3>Option B — Claude OAuth Token</h3>
+      <p>If you're a Claude Pro or Max subscriber, you can use your OAuth token instead:</p>
+      <div class="code-block"><span class="kw">export</span> CLAUDE_CODE_OAUTH_TOKEN=<span class="str">sk-ant-oat01-...</span></div>
+      <p>axiom also checks for an <code class="inline-code">AXIOM_API_KEY</code> environment variable, which is reserved for the upcoming v2 proxy tier.</p>
+      <div class="callout">
+        <strong>Tip:</strong> Create a <code class="inline-code">.env</code> file in your project root and run <code class="inline-code">axiom init</code> — axiom will automatically pick up environment variables from it.
+      </div>
+    </div>
+
+    <div class="docs-section" id="commands">
+      <h2>All commands</h2>
+      <table class="docs-table">
+        <thead>
+          <tr><th>Command</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>axiom list</code></td><td>List all available built-in and custom agents</td></tr>
+          <tr><td><code>axiom try &lt;agent&gt; "&lt;input&gt;"</code></td><td>Run a built-in agent with a prompt</td></tr>
+          <tr><td><code>axiom dashboard</code></td><td>Open the local web dashboard</td></tr>
+          <tr><td><code>axiom create</code></td><td>Scaffold a new custom agent interactively</td></tr>
+          <tr><td><code>axiom init</code></td><td>Initialise axiom in the current project directory</td></tr>
+          <tr><td><code>axiom --help</code></td><td>Show help for any command</td></tr>
+          <tr><td><code>axiom --version</code></td><td>Print the installed version</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="docs-section" id="axiom-list">
+      <h2>axiom list</h2>
+      <p>Lists all available agents — both built-in and any custom agents you've created in the current project's <code class="inline-code">.axiom/agents/</code> directory.</p>
+      <div class="code-block"><span class="p">$</span> axiom list
+
+<span class="cm">Built-in agents (18):</span>
+  research              Research Agent
+  prd-writer            PRD Writer
+  code-review           Code Reviewer
+  email-drafter         Email Drafter
+  competitor-analyzer   Competitor Analyzer
+  ...
+
+<span class="cm">Custom agents (0):</span>
+  <span class="cm">No custom agents found. Run `axiom create` to make one.</span></div>
+    </div>
+
+    <div class="docs-section" id="axiom-try">
+      <h2>axiom try</h2>
+      <p>Runs a built-in or custom agent with the input you provide. The agent executes, prints its output, and saves the run to <code class="inline-code">.axiom/runs/</code>.</p>
+      <div class="code-block"><span class="p">$</span> axiom try &lt;agent-id&gt; <span class="str">"your input here"</span></div>
+
+      <h3>Examples</h3>
+      <div class="code-block"><span class="cm"># Run the research agent</span>
+<span class="p">$</span> axiom try research <span class="str">"What are the top AI agent frameworks in 2026?"</span>
+
+<span class="cm"># Run the code reviewer</span>
+<span class="p">$</span> axiom try code-review <span class="str">"Review my authentication middleware for security issues"</span>
+
+<span class="cm"># Run the PRD writer</span>
+<span class="p">$</span> axiom try prd-writer <span class="str">"A dashboard for tracking AI agent run costs"</span>
+
+<span class="cm"># Run a custom agent</span>
+<span class="p">$</span> axiom try my-custom-agent <span class="str">"your input"</span></div>
+
+      <h3>Flags</h3>
+      <table class="docs-table">
+        <thead><tr><th>Flag</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>--no-persist</code></td><td>Don't save this run to disk</td></tr>
+          <tr><td><code>--json</code></td><td>Output the result as JSON (useful for piping)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="docs-section" id="axiom-dashboard">
+      <h2>axiom dashboard</h2>
+      <p>Starts the local web dashboard and opens it in your default browser. The dashboard lets you browse the agent catalog, trigger runs, and inspect your full run history — all without leaving your machine.</p>
+      <div class="code-block"><span class="p">$</span> axiom dashboard
+
+  axiom dashboard → http://127.0.0.1:3210
+  Ctrl+C to stop</div>
+      <p>By default the dashboard runs on port <code class="inline-code">3210</code>. All data is read from and written to your local <code class="inline-code">.axiom/</code> directory — nothing is sent to any server.</p>
+      <p>See the <a href="dashboard.html">Dashboard page</a> for a full walkthrough of what it shows.</p>
+    </div>
+
+    <div class="docs-section" id="axiom-create">
+      <h2>axiom create</h2>
+      <p>Launches an interactive prompt to scaffold a new custom agent. You define the name, description, system prompt, and which tools the agent can use.</p>
+      <div class="code-block"><span class="p">$</span> axiom create
+
+  <span class="cm">? Agent name:</span>        Interview Summarizer
+  <span class="cm">? Description:</span>      Summarizes customer interview transcripts
+  <span class="cm">? Category:</span>         Product
+  <span class="cm">? System prompt:</span>    You are an expert at synthesizing ...
+  <span class="cm">? Allowed tools:</span>    (select from list)
+
+  <span class="str">✓ Created .axiom/agents/interview-summarizer.json</span></div>
+      <p>The agent definition is saved as a JSON file in <code class="inline-code">.axiom/agents/</code>. It's immediately available via <code class="inline-code">axiom list</code>, <code class="inline-code">axiom try</code>, and the dashboard.</p>
+    </div>
+
+    <div class="docs-section" id="axiom-init">
+      <h2>axiom init</h2>
+      <p>Initialises axiom in the current directory. Creates the <code class="inline-code">.axiom/</code> folder structure and optionally adds it to <code class="inline-code">.gitignore</code> (since run history may be large).</p>
+      <div class="code-block"><span class="p">$</span> axiom init
+
+  <span class="str">✓ Created .axiom/agents/</span>
+  <span class="str">✓ Created .axiom/runs/</span>
+  <span class="str">✓ Added .axiom/runs/ to .gitignore</span></div>
+    </div>
+
+    <div class="docs-section" id="built-in-agents">
+      <h2>Built-in agents</h2>
+      <p>axiom ships with 18+ production-ready agents across 7 categories. They're always available — no configuration needed.</p>
+      <table class="docs-table">
+        <thead><tr><th>ID</th><th>Name</th><th>Category</th></tr></thead>
+        <tbody>
+          <tr><td><code>research</code></td><td>Research Agent</td><td>Research</td></tr>
+          <tr><td><code>data-analyst</code></td><td>Data Analyst</td><td>Research</td></tr>
+          <tr><td><code>code-review</code></td><td>Code Reviewer</td><td>Engineering</td></tr>
+          <tr><td><code>bug-triager</code></td><td>Bug Triager</td><td>Engineering</td></tr>
+          <tr><td><code>documentation-agent</code></td><td>Documentation Agent</td><td>Engineering</td></tr>
+          <tr><td><code>technical-spec-agent</code></td><td>Technical Spec Agent</td><td>Engineering</td></tr>
+          <tr><td><code>test-plan-agent</code></td><td>Test Plan Agent</td><td>Engineering</td></tr>
+          <tr><td><code>release-notes-agent</code></td><td>Release Notes Agent</td><td>Engineering</td></tr>
+          <tr><td><code>prd-writer</code></td><td>PRD Writer</td><td>Product</td></tr>
+          <tr><td><code>customer-feedback-synthesizer</code></td><td>Customer Feedback Synthesizer</td><td>Product</td></tr>
+          <tr><td><code>content-writer</code></td><td>Content Writer</td><td>Marketing</td></tr>
+          <tr><td><code>seo-auditor</code></td><td>SEO Auditor</td><td>Marketing</td></tr>
+          <tr><td><code>competitor-analyzer</code></td><td>Competitor Analyzer</td><td>Business</td></tr>
+          <tr><td><code>sales-prospector</code></td><td>Sales Prospector</td><td>Business</td></tr>
+          <tr><td><code>market-sizing-agent</code></td><td>Market Sizing Agent</td><td>Business</td></tr>
+          <tr><td><code>proposal-writer</code></td><td>Proposal Writer</td><td>Business</td></tr>
+          <tr><td><code>email-drafter</code></td><td>Email Drafter</td><td>Operations</td></tr>
+          <tr><td><code>meeting-summarizer</code></td><td>Meeting Summarizer</td><td>Operations</td></tr>
+          <tr><td><code>customer-support-agent</code></td><td>Customer Support Agent</td><td>Operations</td></tr>
+          <tr><td><code>financial-analyst</code></td><td>Financial Analyst</td><td>Finance</td></tr>
+        </tbody>
+      </table>
+      <p>See the full <a href="agents.html">Agent Catalog</a> for descriptions and example commands.</p>
+    </div>
+
+    <div class="docs-section" id="custom-agents">
+      <h2>Custom agents</h2>
+      <p>You can build your own agents and axiom will treat them exactly like built-in ones — they appear in <code class="inline-code">axiom list</code>, run with <code class="inline-code">axiom try</code>, and show up in the dashboard.</p>
+
+      <h3>Creating a custom agent</h3>
+      <p>The easiest way is the interactive wizard:</p>
+      <div class="code-block"><span class="p">$</span> axiom create</div>
+
+      <h3>Custom agent file format</h3>
+      <p>Custom agents are stored as JSON in <code class="inline-code">.axiom/agents/</code>. You can create or edit them directly:</p>
+      <div class="code-block">{
+  <span class="kw">"id"</span>:           <span class="str">"interview-summarizer"</span>,
+  <span class="kw">"name"</span>:         <span class="str">"Interview Summarizer"</span>,
+  <span class="kw">"summary"</span>:      <span class="str">"Summarizes customer interview transcripts into themes"</span>,
+  <span class="kw">"category"</span>:     <span class="str">"Product"</span>,
+  <span class="kw">"tags"</span>:         [<span class="str">"interviews"</span>, <span class="str">"synthesis"</span>],
+  <span class="kw">"systemPrompt"</span>: <span class="str">"You are an expert at synthesizing customer research..."</span>,
+  <span class="kw">"allowedTools"</span>: [],
+  <span class="kw">"maxLoops"</span>:     5
+}</div>
+
+      <h3>Available tools</h3>
+      <table class="docs-table">
+        <thead><tr><th>Tool</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>web_search</code></td><td>Search the web for current information</td></tr>
+          <tr><td><code>web_scrape</code></td><td>Scrape the content of a URL</td></tr>
+          <tr><td><code>file_reader</code></td><td>Read files from the local filesystem</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="docs-section" id="dashboard">
+      <h2>Dashboard</h2>
+      <p>The axiom dashboard is a local web app that runs entirely on your machine. Start it with:</p>
+      <div class="code-block"><span class="p">$</span> axiom dashboard</div>
+      <p>It serves on <code class="inline-code">http://127.0.0.1:3210</code> and opens automatically in your browser.</p>
+
+      <h3>What the dashboard shows</h3>
+      <ul>
+        <li><strong>Agent Catalog</strong> — all built-in and custom agents, filterable by kind and category. Select one, type your input, and run it directly from the browser.</li>
+        <li><strong>Run History</strong> — every persisted run with timestamp, status (success/error), cost, token count, and duration. Filterable by status and date range.</li>
+        <li><strong>Run Detail</strong> — click any run to inspect its full input, output, tool calls, auth mode, and loop count.</li>
+      </ul>
+      <p>Everything is read from <code class="inline-code">.axiom/runs/</code> on your disk. No data leaves your machine. See the <a href="dashboard.html">Dashboard page</a> for screenshots and a full feature walkthrough.</p>
+    </div>
+
+    <div class="docs-section" id="programmatic">
+      <h2>Programmatic usage</h2>
+      <p>You can import <code class="inline-code">@axiomcm/agents</code> directly into any Node.js or TypeScript project to run agents programmatically.</p>
+
+      <div class="code-block"><span class="p">$</span> npm install @axiomcm/agents</div>
+
+      <h3>Run a built-in agent</h3>
+      <div class="code-block"><span class="kw">import</span> { getBuiltInAgentById, configure } <span class="kw">from</span> <span class="str">'@axiomcm/agents'</span>;
+
+<span class="fn">configure</span>({
+  apiKey:      process.env.ANTHROPIC_API_KEY,
+  storageDir:  <span class="str">'.axiom'</span>,
+  persistRuns: <span class="kw">true</span>,
+});
+
+<span class="kw">const</span> agent = <span class="fn">getBuiltInAgentById</span>(<span class="str">'research'</span>);
+<span class="kw">const</span> result = <span class="kw">await</span> agent.<span class="fn">run</span>(<span class="str">'Latest developments in AI agent frameworks'</span>);
+
+console.<span class="fn">log</span>(result.output);    <span class="cm">// the agent's response</span>
+console.<span class="fn">log</span>(result.cost);      <span class="cm">// e.g. 0.0142</span>
+console.<span class="fn">log</span>(result.tokensUsed); <span class="cm">// { input: 820, output: 4000, total: 4820 }</span></div>
+
+      <h3>Run a custom agent</h3>
+      <div class="code-block"><span class="kw">import</span> { loadAgent } <span class="kw">from</span> <span class="str">'@axiomcm/agents'</span>;
+
+<span class="kw">const</span> agent = <span class="kw">await</span> <span class="fn">loadAgent</span>(<span class="str">'interview-summarizer'</span>, <span class="str">'.axiom'</span>);
+<span class="kw">const</span> result = <span class="kw">await</span> agent.<span class="fn">run</span>(transcript);</div>
+
+      <h3>AgentResult type</h3>
+      <table class="docs-table">
+        <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>output</code></td><td><code>string</code></td><td>The agent's final response text</td></tr>
+          <tr><td><code>success</code></td><td><code>boolean</code></td><td>Whether the run completed without error</td></tr>
+          <tr><td><code>cost</code></td><td><code>number</code></td><td>Estimated USD cost</td></tr>
+          <tr><td><code>tokensUsed</code></td><td><code>{ input, output, total }</code></td><td>Token breakdown</td></tr>
+          <tr><td><code>duration</code></td><td><code>number</code></td><td>Run time in milliseconds</td></tr>
+          <tr><td><code>loops</code></td><td><code>number</code></td><td>Number of agentic loops executed</td></tr>
+          <tr><td><code>toolCalls</code></td><td><code>ToolCall[]</code></td><td>All tool calls made during the run</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="docs-section" id="configuration">
+      <h2>Configuration</h2>
+
+      <h3>Environment variables</h3>
+      <table class="docs-table">
+        <thead><tr><th>Variable</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>ANTHROPIC_API_KEY</code></td><td>Your Anthropic API key (primary auth method)</td></tr>
+          <tr><td><code>CLAUDE_CODE_OAUTH_TOKEN</code></td><td>Claude Pro/Max OAuth token (alternative)</td></tr>
+          <tr><td><code>AXIOM_API_KEY</code></td><td>Reserved for v2 proxy tier (coming soon)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>.axiom/ directory structure</h3>
+      <div class="code-block">.axiom/
+  agents/        <span class="cm"># your custom agent definitions (JSON)</span>
+    my-agent.json
+  runs/          <span class="cm"># persisted run history (one JSON file per run)</span>
+    run-1749123456789.json
+    ...</div>
+      <p>Run files contain the full record: input, output, agent metadata, cost, tokens, duration, tool calls, and auth mode. They're plain JSON and safe to read or process programmatically.</p>
+
+      <div class="callout">
+        <strong>Tip:</strong> Add <code class="inline-code">.axiom/runs/</code> to your <code class="inline-code">.gitignore</code> — run history can grow large over time. Agent definitions in <code class="inline-code">.axiom/agents/</code> are worth committing so your team shares custom agents.
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="index.html" class="wordmark" style="font-size:18px;">axio<em>m</em></a>
+    <div class="footer-links">
+      <a href="https://www.npmjs.com/org/axiomcm" target="_blank">npm</a>
+      <a href="agents.html">Agents</a>
+      <a href="docs.html">Docs</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="changelog.html">Changelog</a>
+    </div>
+    <div class="footer-right">Made with ☕ &nbsp;·&nbsp; MIT &nbsp;·&nbsp; © axiom 2026</div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

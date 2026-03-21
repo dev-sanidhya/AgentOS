@@ -1,0 +1,145 @@
+<svg width="640" height="480" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg-grad" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#1c1108"/>
+      <stop offset="100%" stop-color="#080503"/>
+    </radialGradient>
+    <radialGradient id="glow1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#b45309" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#b45309" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f97316" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#f97316" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow3" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#fbbf24" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur-xl" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="28"/>
+    </filter>
+    <filter id="blur-md" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <filter id="blur-sm" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="640" height="480" fill="url(#bg-grad)"/>
+
+  <!-- Ambient glow orbs -->
+  <ellipse cx="320" cy="240" rx="220" ry="180" fill="url(#glow1)" filter="url(#blur-xl)"/>
+  <ellipse cx="490" cy="130" rx="130" ry="110" fill="url(#glow2)" filter="url(#blur-xl)"/>
+  <ellipse cx="150" cy="370" rx="110" ry="90" fill="url(#glow3)" filter="url(#blur-xl)"/>
+
+  <!-- Network edges — dim background -->
+  <g stroke="#b45309" stroke-opacity="0.18" stroke-width="0.7" fill="none">
+    <line x1="320" y1="240" x2="195" y2="155"/>
+    <line x1="320" y1="240" x2="445" y2="148"/>
+    <line x1="320" y1="240" x2="490" y2="308"/>
+    <line x1="320" y1="240" x2="175" y2="345"/>
+    <line x1="320" y1="240" x2="135" y2="198"/>
+    <line x1="320" y1="240" x2="510" y2="195"/>
+    <line x1="320" y1="240" x2="425" y2="385"/>
+    <line x1="320" y1="240" x2="215" y2="405"/>
+    <line x1="195" y1="155" x2="445" y2="148"/>
+    <line x1="195" y1="155" x2="135" y2="198"/>
+    <line x1="195" y1="155" x2="175" y2="345"/>
+    <line x1="445" y1="148" x2="510" y2="195"/>
+    <line x1="445" y1="148" x2="490" y2="308"/>
+    <line x1="490" y1="308" x2="425" y2="385"/>
+    <line x1="490" y1="308" x2="510" y2="195"/>
+    <line x1="175" y1="345" x2="215" y2="405"/>
+    <line x1="175" y1="345" x2="425" y2="385"/>
+    <line x1="75" y1="115" x2="135" y2="198"/>
+    <line x1="75" y1="115" x2="195" y2="155"/>
+    <line x1="565" y1="95" x2="445" y2="148"/>
+    <line x1="565" y1="95" x2="510" y2="195"/>
+    <line x1="585" y1="385" x2="490" y2="308"/>
+    <line x1="585" y1="385" x2="425" y2="385"/>
+    <line x1="55" y1="425" x2="175" y2="345"/>
+    <line x1="55" y1="425" x2="215" y2="405"/>
+    <line x1="265" y1="72" x2="195" y2="155"/>
+    <line x1="265" y1="72" x2="445" y2="148"/>
+    <line x1="385" y1="445" x2="215" y2="405"/>
+    <line x1="385" y1="445" x2="425" y2="385"/>
+    <line x1="135" y1="198" x2="175" y2="345"/>
+    <line x1="510" y1="195" x2="585" y2="385"/>
+    <line x1="75" y1="115" x2="565" y2="95"/>
+    <line x1="565" y1="95" x2="585" y2="385"/>
+    <line x1="75" y1="115" x2="55" y2="425"/>
+  </g>
+
+  <!-- Highlighted active path (glowing) -->
+  <g stroke="#f97316" stroke-opacity="0.6" stroke-width="1.4" fill="none" filter="url(#blur-sm)">
+    <line x1="320" y1="240" x2="445" y2="148"/>
+    <line x1="320" y1="240" x2="490" y2="308"/>
+    <line x1="445" y1="148" x2="510" y2="195"/>
+    <line x1="195" y1="155" x2="135" y2="198"/>
+  </g>
+
+  <!-- Outer nodes -->
+  <g fill="#92400e" fill-opacity="0.5">
+    <circle cx="75" cy="115" r="3"/>
+    <circle cx="565" cy="95" r="3"/>
+    <circle cx="585" cy="385" r="3.5"/>
+    <circle cx="55" cy="425" r="3"/>
+    <circle cx="265" cy="72" r="2.5"/>
+    <circle cx="385" cy="445" r="3"/>
+    <circle cx="570" cy="290" r="2"/>
+    <circle cx="95" cy="285" r="2"/>
+    <circle cx="355" cy="38" r="1.8"/>
+    <circle cx="610" cy="195" r="1.8"/>
+  </g>
+
+  <!-- Mid-ring nodes -->
+  <g fill="#b45309">
+    <circle cx="135" cy="198" r="5" fill-opacity="0.65"/>
+    <circle cx="510" cy="195" r="5" fill-opacity="0.65"/>
+    <circle cx="215" cy="405" r="5" fill-opacity="0.65"/>
+    <circle cx="425" cy="385" r="5" fill-opacity="0.65"/>
+  </g>
+  <g fill="#f97316" filter="url(#blur-sm)">
+    <circle cx="135" cy="198" r="8" fill-opacity="0.35"/>
+    <circle cx="510" cy="195" r="8" fill-opacity="0.35"/>
+    <circle cx="215" cy="405" r="8" fill-opacity="0.35"/>
+    <circle cx="425" cy="385" r="8" fill-opacity="0.35"/>
+  </g>
+
+  <!-- Inner ring nodes -->
+  <g fill="#f97316" fill-opacity="0.9">
+    <circle cx="195" cy="155" r="7"/>
+    <circle cx="445" cy="148" r="7"/>
+    <circle cx="490" cy="308" r="7"/>
+    <circle cx="175" cy="345" r="7"/>
+  </g>
+  <g fill="#fbbf24" filter="url(#blur-md)">
+    <circle cx="195" cy="155" r="14" fill-opacity="0.45"/>
+    <circle cx="445" cy="148" r="14" fill-opacity="0.45"/>
+    <circle cx="490" cy="308" r="14" fill-opacity="0.45"/>
+    <circle cx="175" cy="345" r="14" fill-opacity="0.45"/>
+  </g>
+
+  <!-- Central node -->
+  <circle cx="320" cy="240" r="45" fill="#b45309" fill-opacity="0.12" filter="url(#blur-xl)"/>
+  <circle cx="320" cy="240" r="22" fill="#f97316" fill-opacity="0.25" filter="url(#blur-md)"/>
+  <circle cx="320" cy="240" r="11" fill="#fbbf24" fill-opacity="0.95"/>
+  <circle cx="320" cy="240" r="5" fill="#fff" fill-opacity="0.9"/>
+
+  <!-- Floating sparkle dots -->
+  <g fill="#fde68a">
+    <circle cx="375" cy="178" r="1.5" fill-opacity="0.6"/>
+    <circle cx="268" cy="192" r="1.2" fill-opacity="0.5"/>
+    <circle cx="395" cy="312" r="1.5" fill-opacity="0.6"/>
+    <circle cx="243" cy="272" r="1" fill-opacity="0.4"/>
+    <circle cx="458" cy="245" r="1" fill-opacity="0.5"/>
+    <circle cx="162" cy="258" r="1.5" fill-opacity="0.4"/>
+    <circle cx="525" cy="158" r="1" fill-opacity="0.5"/>
+    <circle cx="302" cy="362" r="1" fill-opacity="0.4"/>
+    <circle cx="340" cy="142" r="1.2" fill-opacity="0.5"/>
+    <circle cx="415" cy="270" r="1" fill-opacity="0.4"/>
+  </g>
+</svg>

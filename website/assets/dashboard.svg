@@ -1,0 +1,210 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-main" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a1f2e"/>
+      <stop offset="100%" stop-color="#0f1219"/>
+    </linearGradient>
+    <linearGradient id="panel-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="accent-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#b45309"/>
+      <stop offset="100%" stop-color="#f97316"/>
+    </linearGradient>
+    <linearGradient id="green-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <radialGradient id="glow-center" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#b45309" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#b45309" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <filter id="glow-filter" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+    <clipPath id="main-clip">
+      <rect width="1280" height="720" rx="0"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1280" height="720" fill="url(#bg-main)"/>
+  <ellipse cx="640" cy="360" rx="500" ry="350" fill="url(#glow-center)"/>
+
+  <!-- Nav bar -->
+  <rect width="1280" height="62" fill="#ffffff" fill-opacity="0.04"/>
+  <rect width="1280" height="1" y="62" fill="#ffffff" fill-opacity="0.08"/>
+
+  <!-- Wordmark -->
+  <text x="32" y="40" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#f7f0e3" letter-spacing="-1">axio</text>
+  <text x="80" y="40" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#b45309" letter-spacing="-1">m</text>
+
+  <!-- Nav items -->
+  <text x="148" y="36" font-family="Arial, sans-serif" font-size="13" fill="#f7f0e3" fill-opacity="0.55">Agents</text>
+  <text x="206" y="36" font-family="Arial, sans-serif" font-size="13" fill="#f7f0e3" fill-opacity="0.55">Runs</text>
+  <text x="254" y="36" font-family="Arial, sans-serif" font-size="13" fill="#f7f0e3" fill-opacity="0.55">Settings</text>
+
+  <!-- Project badge -->
+  <rect x="1080" y="16" width="168" height="32" rx="8" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-opacity="0.1" stroke-width="1"/>
+  <circle cx="1097" cy="32" r="4" fill="#059669"/>
+  <text x="1108" y="37" font-family="Arial, sans-serif" font-size="12" fill="#f7f0e3" fill-opacity="0.7">Sub-Agents Library</text>
+
+  <!-- Left panel: Agent Catalog -->
+  <rect x="24" y="86" width="590" height="610" rx="16" fill="url(#panel-grad)" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1" filter="url(#shadow)"/>
+
+  <!-- Left panel header -->
+  <text x="48" y="124" font-family="Georgia, serif" font-size="17" font-weight="700" fill="#f7f0e3">Agent Catalog</text>
+  <text x="48" y="146" font-family="Arial, sans-serif" font-size="12" fill="#f7f0e3" fill-opacity="0.4">Built-in agents and saved custom agents</text>
+  <rect x="24" y="158" width="590" height="1" fill="#ffffff" fill-opacity="0.07"/>
+
+  <!-- Filter row -->
+  <rect x="48" y="172" width="180" height="32" rx="8" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1"/>
+  <text x="62" y="192" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.5">KIND</text>
+  <rect x="250" y="172" width="180" height="32" rx="8" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1"/>
+  <text x="264" y="192" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.5">CATEGORY</text>
+
+  <!-- Composer -->
+  <rect x="48" y="218" width="510" height="52" rx="8" fill="#ffffff" fill-opacity="0.04" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
+  <text x="64" y="248" font-family="Arial, sans-serif" font-size="12" fill="#f7f0e3" fill-opacity="0.3">Describe what the agent should do…</text>
+  <rect x="504" y="226" width="46" height="36" rx="7" fill="#18181b"/>
+  <text x="520" y="248" font-family="Arial, sans-serif" font-size="12" font-weight="600" fill="#f7f0e3">Run</text>
+
+  <!-- Agent cards -->
+  <!-- Card 1 (selected) -->
+  <rect x="48" y="284" width="246" height="108" rx="12" fill="#ffffff" fill-opacity="0.08" stroke="#b45309" stroke-opacity="0.6" stroke-width="1.5"/>
+  <text x="66" y="308" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#f7f0e3">Research Agent</text>
+  <rect x="172" y="295" width="54" height="18" rx="9" fill="#b45309" fill-opacity="0.2"/>
+  <text x="182" y="308" font-family="Arial, sans-serif" font-size="10" fill="#b45309" font-weight="600">Research</text>
+  <text x="66" y="328" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.5">Deep research on any topic using</text>
+  <text x="66" y="342" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.5">web search and synthesis.</text>
+  <rect x="66" y="354" width="54" height="16" rx="8" fill="#ffffff" fill-opacity="0.08"/>
+  <text x="74" y="366" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.6">web_search</text>
+  <rect x="66" y="372" width="76" height="14" rx="5" fill="#b45309" fill-opacity="0.15"/>
+  <text x="74" y="383" font-family="Arial, sans-serif" font-size="10" fill="#b45309" font-weight="600">✓ Selected</text>
+
+  <!-- Card 2 -->
+  <rect x="306" y="284" width="246" height="108" rx="12" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
+  <text x="324" y="308" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#f7f0e3">PRD Writer</text>
+  <rect x="400" y="295" width="50" height="18" rx="9" fill="#a16207" fill-opacity="0.2"/>
+  <text x="410" y="308" font-family="Arial, sans-serif" font-size="10" fill="#ca8a04" font-weight="600">Product</text>
+  <text x="324" y="328" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.5">Generates structured product</text>
+  <text x="324" y="342" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.5">requirement documents.</text>
+  <rect x="324" y="372" width="48" height="14" rx="5" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="332" y="383" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.5">Select</text>
+
+  <!-- Card 3 -->
+  <rect x="48" y="404" width="246" height="108" rx="12" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
+  <text x="66" y="428" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#f7f0e3">Code Reviewer</text>
+  <rect x="182" y="415" width="70" height="18" rx="9" fill="#7c3aed" fill-opacity="0.2"/>
+  <text x="192" y="428" font-family="Arial, sans-serif" font-size="10" fill="#a78bfa" font-weight="600">Engineering</text>
+  <text x="66" y="448" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.5">Reviews code for bugs, style</text>
+  <text x="66" y="462" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.5">issues, and vulnerabilities.</text>
+  <rect x="66" y="492" width="48" height="14" rx="5" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="74" y="503" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.5">Select</text>
+
+  <!-- Card 4 -->
+  <rect x="306" y="404" width="246" height="108" rx="12" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
+  <text x="324" y="428" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#f7f0e3">Email Drafter</text>
+  <rect x="426" y="415" width="62" height="18" rx="9" fill="#059669" fill-opacity="0.15"/>
+  <text x="436" y="428" font-family="Arial, sans-serif" font-size="10" fill="#10b981" font-weight="600">Operations</text>
+  <text x="324" y="448" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.5">Drafts professional emails from</text>
+  <text x="324" y="462" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.5">a brief description of intent.</text>
+  <rect x="324" y="492" width="48" height="14" rx="5" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="332" y="503" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.5">Select</text>
+
+  <!-- More cards hint -->
+  <text x="48" y="545" font-family="Arial, sans-serif" font-size="12" fill="#f7f0e3" fill-opacity="0.25">+ 16 more agents…</text>
+
+  <!-- Right panel: Run History -->
+  <rect x="638" y="86" width="618" height="610" rx="16" fill="url(#panel-grad)" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1" filter="url(#shadow)"/>
+
+  <!-- Right panel header -->
+  <text x="662" y="124" font-family="Georgia, serif" font-size="17" font-weight="700" fill="#f7f0e3">Run History</text>
+  <text x="662" y="146" font-family="Arial, sans-serif" font-size="12" fill="#f7f0e3" fill-opacity="0.4">Persisted runs from .axiom/runs</text>
+  <rect x="638" y="158" width="618" height="1" fill="#ffffff" fill-opacity="0.07"/>
+
+  <!-- Run filter row -->
+  <rect x="662" y="172" width="180" height="32" rx="8" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1"/>
+  <text x="676" y="192" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.5">STATUS: All</text>
+  <rect x="856" y="172" width="180" height="32" rx="8" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1"/>
+  <text x="870" y="192" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.5">DATE: All time</text>
+
+  <!-- Run cards -->
+  <!-- Run 1 - success -->
+  <rect x="662" y="218" width="570" height="90" rx="12" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1"/>
+  <text x="680" y="244" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#f7f0e3">Research Agent</text>
+  <text x="680" y="260" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.4">3/21/2026, 11:55 AM</text>
+  <circle cx="680" cy="282" r="4" fill="#059669"/>
+  <rect x="692" y="273" width="44" height="16" rx="8" fill="#059669" fill-opacity="0.15"/>
+  <text x="700" y="284" font-family="Arial, sans-serif" font-size="10" fill="#10b981" font-weight="600">success</text>
+  <rect x="748" y="273" width="60" height="16" rx="8" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="756" y="284" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.6">$0.0142</text>
+  <rect x="820" y="273" width="60" height="16" rx="8" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="828" y="284" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.6">4820 tok</text>
+  <rect x="892" y="273" width="44" height="16" rx="8" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="900" y="284" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.6">12.4s</text>
+  <rect x="1168" y="230" width="54" height="28" rx="7" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="1182" y="248" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.7">Inspect</text>
+
+  <!-- Run 2 - success -->
+  <rect x="662" y="320" width="570" height="90" rx="12" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1"/>
+  <text x="680" y="346" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#f7f0e3">PRD Writer</text>
+  <text x="680" y="362" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.4">3/20/2026, 12:55 PM</text>
+  <circle cx="680" cy="384" r="4" fill="#059669"/>
+  <rect x="692" y="375" width="44" height="16" rx="8" fill="#059669" fill-opacity="0.15"/>
+  <text x="700" y="386" font-family="Arial, sans-serif" font-size="10" fill="#10b981" font-weight="600">success</text>
+  <rect x="748" y="375" width="60" height="16" rx="8" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="756" y="386" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.6">$0.0089</text>
+  <rect x="820" y="375" width="60" height="16" rx="8" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="828" y="386" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.6">2930 tok</text>
+  <rect x="892" y="375" width="44" height="16" rx="8" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="900" y="386" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.6">8.2s</text>
+  <rect x="1168" y="332" width="54" height="28" rx="7" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="1182" y="350" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.7">Inspect</text>
+
+  <!-- Run 3 - error -->
+  <rect x="662" y="422" width="570" height="90" rx="12" fill="#ffffff" fill-opacity="0.04" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1"/>
+  <text x="680" y="448" font-family="Arial, sans-serif" font-size="14" font-weight="600" fill="#f7f0e3">Code Reviewer</text>
+  <text x="680" y="464" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.4">3/19/2026, 12:55 PM</text>
+  <circle cx="680" cy="486" r="4" fill="#dc2626"/>
+  <rect x="692" y="477" width="36" height="16" rx="8" fill="#dc2626" fill-opacity="0.15"/>
+  <text x="700" y="488" font-family="Arial, sans-serif" font-size="10" fill="#f87171" font-weight="600">error</text>
+  <rect x="740" y="477" width="60" height="16" rx="8" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="748" y="488" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.6">$0.0021</text>
+  <rect x="812" y="477" width="52" height="16" rx="8" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="820" y="488" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.6">710 tok</text>
+  <rect x="876" y="477" width="44" height="16" rx="8" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="884" y="488" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.6">3.1s</text>
+  <rect x="1168" y="434" width="54" height="28" rx="7" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="1182" y="452" font-family="Arial, sans-serif" font-size="11" fill="#f7f0e3" fill-opacity="0.7">Inspect</text>
+
+  <!-- Run detail section -->
+  <rect x="662" y="530" width="570" height="1" fill="#ffffff" fill-opacity="0.08"/>
+  <text x="662" y="556" font-family="Arial, sans-serif" font-size="11" font-weight="600" fill="#f7f0e3" fill-opacity="0.4" letter-spacing="1">RUN DETAIL</text>
+
+  <!-- Detail pills -->
+  <rect x="662" y="568" width="52" height="20" rx="10" fill="#059669" fill-opacity="0.15"/>
+  <circle cx="674" cy="578" r="4" fill="#059669"/>
+  <text x="682" y="582" font-family="Arial, sans-serif" font-size="10" fill="#10b981" font-weight="600">success</text>
+  <rect x="724" y="568" width="58" height="20" rx="10" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="734" y="582" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.6">api_key</text>
+  <rect x="792" y="568" width="52" height="20" rx="10" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="802" y="582" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.6">3 loops</text>
+  <rect x="854" y="568" width="70" height="20" rx="10" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="864" y="582" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.6">4820 tokens</text>
+  <rect x="934" y="568" width="58" height="20" rx="10" fill="#ffffff" fill-opacity="0.07"/>
+  <text x="944" y="582" font-family="Arial, sans-serif" font-size="10" fill="#f7f0e3" fill-opacity="0.6">$0.0142</text>
+
+  <!-- Input/output blocks -->
+  <text x="662" y="610" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="#f7f0e3" fill-opacity="0.35" letter-spacing="1">INPUT</text>
+  <rect x="662" y="618" width="570" height="28" rx="6" fill="#ffffff" fill-opacity="0.04" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1"/>
+  <text x="674" y="636" font-family="monospace" font-size="11" fill="#f7f0e3" fill-opacity="0.55">Compare the top AI agent frameworks for 2026</text>
+
+  <text x="662" y="664" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="#f7f0e3" fill-opacity="0.35" letter-spacing="1">OUTPUT</text>
+  <rect x="662" y="672" width="570" height="20" rx="6" fill="#ffffff" fill-opacity="0.04" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1"/>
+  <text x="674" y="686" font-family="monospace" font-size="11" fill="#f7f0e3" fill-opacity="0.4">Here is a comprehensive comparison…</text>
+</svg>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agent Catalog — axiom</title>
+  <meta name="description" content="18+ production-ready AI agents across Research, Engineering, Product, Marketing, Business, Operations, and Finance." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="wordmark">axio<em>m</em></a>
+    <div class="nav-links">
+      <a href="agents.html">Agents</a>
+      <a href="docs.html">Docs</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="changelog.html">Changelog</a>
+    </div>
+    <button class="install-chip">
+      <span class="dollar">$</span> npm i -g @axiomcm/cli <span style="opacity:.5;">⎘</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Page header -->
+<div style="padding: 64px 0 48px; border-bottom: 1px solid var(--line);">
+  <div class="container">
+    <div class="section-label">Agent Catalog</div>
+    <h1 style="font-size: clamp(36px, 5vw, 58px); margin-bottom: 16px; line-height: 1.1;">
+      18+ agents.<br><em>Ready to run.</em>
+    </h1>
+    <p class="section-sub">Every agent is prompt-engineered, tested, and drops straight into your workflow. Run them from the CLI, the dashboard, or import them directly into your Node.js app.</p>
+
+    <div class="terminal-block mt-6" style="display:inline-flex; margin-top: 28px;">
+      <span class="prompt">$</span> axiom list
+      <span style="color:rgba(247,240,227,0.4); margin-left:12px;"># see all agents</span>
+    </div>
+  </div>
+</div>
+
+<!-- Filter + grid -->
+<section class="section" style="padding-top: 48px;">
+  <div class="container">
+    <img
+      class="img-banner"
+      src="assets/agents-banner.svg"
+      alt="Abstract AI agent network"
+      loading="lazy"
+    />
+
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom: 32px;">
+      <div class="filter-bar" style="margin-bottom:0;">
+        <button class="filter-btn active" onclick="filterCategory(this, '')">All <span id="agent-count" style="opacity:.5; font-size:11px;">20</span></button>
+        <button class="filter-btn" onclick="filterCategory(this, 'Research')">Research</button>
+        <button class="filter-btn" onclick="filterCategory(this, 'Engineering')">Engineering</button>
+        <button class="filter-btn" onclick="filterCategory(this, 'Product')">Product</button>
+        <button class="filter-btn" onclick="filterCategory(this, 'Marketing')">Marketing</button>
+        <button class="filter-btn" onclick="filterCategory(this, 'Business')">Business</button>
+        <button class="filter-btn" onclick="filterCategory(this, 'Operations')">Operations</button>
+        <button class="filter-btn" onclick="filterCategory(this, 'Finance')">Finance</button>
+      </div>
+    </div>
+
+    <div class="agents-grid">
+
+      <!-- Research (2) -->
+      <div class="agent-card c-research" data-category="Research">
+        <div class="agent-top">
+          <div class="agent-name">Research Agent</div>
+          <span class="pill pill-cat c-research">Research</span>
+        </div>
+        <div class="agent-desc">Deep research on any topic using web search and synthesis. Returns structured, cited findings in a scannable format.</div>
+        <div class="agent-pills">
+          <span class="pill pill-tool">web_search</span>
+          <span class="pill pill-tool">web_scrape</span>
+        </div>
+        <div class="run-cmd" onclick="copyText('axiom try research &quot;your topic&quot;', this)">
+          <span class="run-cmd-text">$ axiom try research "your topic"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-research" data-category="Research">
+        <div class="agent-top">
+          <div class="agent-name">Data Analyst</div>
+          <span class="pill pill-cat c-research">Research</span>
+        </div>
+        <div class="agent-desc">Interprets datasets, surfaces key trends and anomalies, and produces plain-English commentary with recommendations.</div>
+        <div class="agent-pills">
+          <span class="pill pill-tool">file_reader</span>
+        </div>
+        <div class="run-cmd" onclick="copyText('axiom try data-analyst &quot;analyze this dataset&quot;', this)">
+          <span class="run-cmd-text">$ axiom try data-analyst "analyze dataset"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <!-- Engineering (6) -->
+      <div class="agent-card c-engineering" data-category="Engineering">
+        <div class="agent-top">
+          <div class="agent-name">Code Reviewer</div>
+          <span class="pill pill-cat c-engineering">Engineering</span>
+        </div>
+        <div class="agent-desc">Reviews code for bugs, style issues, security vulnerabilities, and improvement opportunities. Works on any language.</div>
+        <div class="agent-pills"><span class="pill pill-tool">file_reader</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try code-review &quot;review my auth module&quot;', this)">
+          <span class="run-cmd-text">$ axiom try code-review "review my auth"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-engineering" data-category="Engineering">
+        <div class="agent-top">
+          <div class="agent-name">Bug Triager</div>
+          <span class="pill pill-cat c-engineering">Engineering</span>
+        </div>
+        <div class="agent-desc">Triages bug reports, classifies severity, identifies likely root causes, and suggests reproduction steps and fixes.</div>
+        <div class="agent-pills"><span class="pill pill-tool">No external tools</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try bug-triager &quot;describe the bug&quot;', this)">
+          <span class="run-cmd-text">$ axiom try bug-triager "describe the bug"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-engineering" data-category="Engineering">
+        <div class="agent-top">
+          <div class="agent-name">Documentation Agent</div>
+          <span class="pill pill-cat c-engineering">Engineering</span>
+        </div>
+        <div class="agent-desc">Generates clear, structured documentation from code, descriptions, or rough notes. Outputs Markdown by default.</div>
+        <div class="agent-pills"><span class="pill pill-tool">file_reader</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try documentation-agent &quot;document my API&quot;', this)">
+          <span class="run-cmd-text">$ axiom try documentation-agent "my API"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-engineering" data-category="Engineering">
+        <div class="agent-top">
+          <div class="agent-name">Technical Spec Agent</div>
+          <span class="pill pill-cat c-engineering">Engineering</span>
+        </div>
+        <div class="agent-desc">Writes technical specifications from high-level feature descriptions. Covers architecture, edge cases, and open questions.</div>
+        <div class="agent-pills"><span class="pill pill-tool">No external tools</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try technical-spec-agent &quot;feature description&quot;', this)">
+          <span class="run-cmd-text">$ axiom try technical-spec-agent "feature"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-engineering" data-category="Engineering">
+        <div class="agent-top">
+          <div class="agent-name">Test Plan Agent</div>
+          <span class="pill pill-cat c-engineering">Engineering</span>
+        </div>
+        <div class="agent-desc">Generates comprehensive test plans including unit, integration, and edge case scenarios for a given feature or module.</div>
+        <div class="agent-pills"><span class="pill pill-tool">No external tools</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try test-plan-agent &quot;describe feature&quot;', this)">
+          <span class="run-cmd-text">$ axiom try test-plan-agent "feature"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-engineering" data-category="Engineering">
+        <div class="agent-top">
+          <div class="agent-name">Release Notes Agent</div>
+          <span class="pill pill-cat c-engineering">Engineering</span>
+        </div>
+        <div class="agent-desc">Converts git commit messages or a raw list of changes into clean, audience-appropriate release notes.</div>
+        <div class="agent-pills"><span class="pill pill-tool">No external tools</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try release-notes-agent &quot;list of changes&quot;', this)">
+          <span class="run-cmd-text">$ axiom try release-notes-agent "changes"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <!-- Product (2) -->
+      <div class="agent-card c-product" data-category="Product">
+        <div class="agent-top">
+          <div class="agent-name">PRD Writer</div>
+          <span class="pill pill-cat c-product">Product</span>
+        </div>
+        <div class="agent-desc">Generates structured product requirement documents from a brief description — sections, user stories, and acceptance criteria.</div>
+        <div class="agent-pills"><span class="pill pill-tool">No external tools</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try prd-writer &quot;your feature idea&quot;', this)">
+          <span class="run-cmd-text">$ axiom try prd-writer "your feature"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-product" data-category="Product">
+        <div class="agent-top">
+          <div class="agent-name">Customer Feedback Synthesizer</div>
+          <span class="pill pill-cat c-product">Product</span>
+        </div>
+        <div class="agent-desc">Processes raw customer feedback (NPS, support tickets, reviews) and extracts themes, sentiment, and prioritized insights.</div>
+        <div class="agent-pills"><span class="pill pill-tool">No external tools</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try customer-feedback-synthesizer &quot;paste feedback&quot;', this)">
+          <span class="run-cmd-text">$ axiom try customer-feedback-synthesizer</span><span>⎘</span>
+        </div>
+      </div>
+
+      <!-- Marketing (2) -->
+      <div class="agent-card c-marketing" data-category="Marketing">
+        <div class="agent-top">
+          <div class="agent-name">Content Writer</div>
+          <span class="pill pill-cat c-marketing">Marketing</span>
+        </div>
+        <div class="agent-desc">Creates polished blog posts, landing page copy, and product marketing content from a one-line brief and tone description.</div>
+        <div class="agent-pills"><span class="pill pill-tool">No external tools</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try content-writer &quot;launch blog post&quot;', this)">
+          <span class="run-cmd-text">$ axiom try content-writer "launch post"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-marketing" data-category="Marketing">
+        <div class="agent-top">
+          <div class="agent-name">SEO Auditor</div>
+          <span class="pill pill-cat c-marketing">Marketing</span>
+        </div>
+        <div class="agent-desc">Audits a page or content brief for SEO — keyword opportunities, title/meta improvements, structure, and content gaps.</div>
+        <div class="agent-pills">
+          <span class="pill pill-tool">web_search</span>
+          <span class="pill pill-tool">web_scrape</span>
+        </div>
+        <div class="run-cmd" onclick="copyText('axiom try seo-auditor &quot;your page URL or topic&quot;', this)">
+          <span class="run-cmd-text">$ axiom try seo-auditor "your page topic"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <!-- Business (3) -->
+      <div class="agent-card c-business" data-category="Business">
+        <div class="agent-top">
+          <div class="agent-name">Competitor Analyzer</div>
+          <span class="pill pill-cat c-business">Business</span>
+        </div>
+        <div class="agent-desc">Analyzes competitors and surfaces positioning opportunities, pricing gaps, and messaging weaknesses.</div>
+        <div class="agent-pills">
+          <span class="pill pill-tool">web_search</span>
+          <span class="pill pill-tool">web_scrape</span>
+        </div>
+        <div class="run-cmd" onclick="copyText('axiom try competitor-analyzer &quot;vs Notion&quot;', this)">
+          <span class="run-cmd-text">$ axiom try competitor-analyzer "vs Notion"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-business" data-category="Business">
+        <div class="agent-top">
+          <div class="agent-name">Sales Prospector</div>
+          <span class="pill pill-cat c-business">Business</span>
+        </div>
+        <div class="agent-desc">Identifies and qualifies high-fit leads for outbound sales based on your ICP description. Returns a prioritized prospect list.</div>
+        <div class="agent-pills"><span class="pill pill-tool">web_search</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try sales-prospector &quot;B2B SaaS fintech ICP&quot;', this)">
+          <span class="run-cmd-text">$ axiom try sales-prospector "your ICP"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-business" data-category="Business">
+        <div class="agent-top">
+          <div class="agent-name">Market Sizing Agent</div>
+          <span class="pill pill-cat c-business">Business</span>
+        </div>
+        <div class="agent-desc">Estimates TAM, SAM, and SOM for a given market using top-down and bottom-up research. Surfaces assumptions and sources.</div>
+        <div class="agent-pills">
+          <span class="pill pill-tool">web_search</span>
+          <span class="pill pill-tool">web_scrape</span>
+        </div>
+        <div class="run-cmd" onclick="copyText('axiom try market-sizing-agent &quot;AI agent tooling market&quot;', this)">
+          <span class="run-cmd-text">$ axiom try market-sizing-agent "market"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <!-- Operations (3) -->
+      <div class="agent-card c-operations" data-category="Operations">
+        <div class="agent-top">
+          <div class="agent-name">Email Drafter</div>
+          <span class="pill pill-cat c-operations">Operations</span>
+        </div>
+        <div class="agent-desc">Drafts professional emails from a brief description of intent, recipient, and tone. Subject line included.</div>
+        <div class="agent-pills"><span class="pill pill-tool">No external tools</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try email-drafter &quot;cold outreach to a Series A founder&quot;', this)">
+          <span class="run-cmd-text">$ axiom try email-drafter "cold outreach"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-operations" data-category="Operations">
+        <div class="agent-top">
+          <div class="agent-name">Meeting Summarizer</div>
+          <span class="pill pill-cat c-operations">Operations</span>
+        </div>
+        <div class="agent-desc">Condenses meeting transcripts into actions, decisions, and owners. Works on raw or cleaned transcripts from any tool.</div>
+        <div class="agent-pills"><span class="pill pill-tool">No external tools</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try meeting-summarizer &quot;paste your transcript&quot;', this)">
+          <span class="run-cmd-text">$ axiom try meeting-summarizer "transcript"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-operations" data-category="Operations">
+        <div class="agent-top">
+          <div class="agent-name">Customer Support Agent</div>
+          <span class="pill pill-cat c-operations">Operations</span>
+        </div>
+        <div class="agent-desc">Drafts empathetic, accurate support responses from a ticket description and context. Reduces first-reply time significantly.</div>
+        <div class="agent-pills"><span class="pill pill-tool">No external tools</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try customer-support-agent &quot;paste ticket&quot;', this)">
+          <span class="run-cmd-text">$ axiom try customer-support-agent "ticket"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <!-- Finance (1) -->
+      <div class="agent-card c-finance" data-category="Finance">
+        <div class="agent-top">
+          <div class="agent-name">Financial Analyst</div>
+          <span class="pill pill-cat c-finance">Finance</span>
+        </div>
+        <div class="agent-desc">Analyzes financial data, produces structured commentary on trends, margins, and anomalies. Suitable for board decks and investor updates.</div>
+        <div class="agent-pills"><span class="pill pill-tool">file_reader</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try financial-analyst &quot;analyze Q1 financials&quot;', this)">
+          <span class="run-cmd-text">$ axiom try financial-analyst "Q1 data"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <!-- Proposal writer (Business) -->
+      <div class="agent-card c-business" data-category="Business">
+        <div class="agent-top">
+          <div class="agent-name">Proposal Writer</div>
+          <span class="pill pill-cat c-business">Business</span>
+        </div>
+        <div class="agent-desc">Writes professional business proposals from a brief — scope, pricing rationale, timeline, and call-to-action included.</div>
+        <div class="agent-pills"><span class="pill pill-tool">No external tools</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try proposal-writer &quot;describe the deal&quot;', this)">
+          <span class="run-cmd-text">$ axiom try proposal-writer "describe deal"</span><span>⎘</span>
+        </div>
+      </div>
+
+    </div><!-- /agents-grid -->
+
+    <!-- Custom agents CTA -->
+    <div style="margin-top: 64px; padding: 40px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+      <div>
+        <div class="section-label" style="margin-bottom: 8px;">Custom Agents</div>
+        <h3 style="font-size: 22px; margin-bottom: 8px;">Don't see what you need?</h3>
+        <p style="color: var(--muted); font-size: 14px; max-width: 46ch; line-height: 1.6;">Build your own agent in minutes with <code class="inline-code">axiom create</code>. Define the system prompt, tools, and parameters — axiom handles the rest.</p>
+      </div>
+      <a href="docs.html#custom-agents" class="btn btn-dark" style="flex-shrink:0;">Build your own agent →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="index.html" class="wordmark" style="font-size:18px;">axio<em>m</em></a>
+    <div class="footer-links">
+      <a href="https://www.npmjs.com/org/axiomcm" target="_blank">npm</a>
+      <a href="agents.html">Agents</a>
+      <a href="docs.html">Docs</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="changelog.html">Changelog</a>
+    </div>
+    <div class="footer-right">Made with ☕ &nbsp;·&nbsp; MIT &nbsp;·&nbsp; © axiom 2026</div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

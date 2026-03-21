@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Changelog — axiom</title>
+  <meta name="description" content="axiom release history — what's new, what's fixed, and what's coming." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="wordmark">axio<em>m</em></a>
+    <div class="nav-links">
+      <a href="agents.html">Agents</a>
+      <a href="docs.html">Docs</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="changelog.html">Changelog</a>
+    </div>
+    <button class="install-chip">
+      <span class="dollar">$</span> npm i -g @axiomcm/cli <span style="opacity:.5;">⎘</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Page header -->
+<div style="padding: 64px 0 56px; border-bottom: 1px solid var(--line);">
+  <div class="container">
+    <div class="section-label">Changelog</div>
+    <h1 style="font-size: clamp(36px, 5vw, 56px); margin-bottom: 16px; line-height: 1.1;">What's new in axiom</h1>
+    <p class="section-sub">Every release, documented. We ship often and break nothing.</p>
+  </div>
+</div>
+
+<section class="section" style="padding-top: 64px;">
+  <div class="container" style="max-width: 760px;">
+
+    <!-- v0.1.0 -->
+    <div class="changelog-entry">
+      <div class="changelog-version">@axiomcm/cli@0.1.0</div>
+      <div class="changelog-date">March 21, 2026 — Initial release</div>
+      <h2>The first public release of axiom</h2>
+
+      <ul class="changelog-list">
+        <li>
+          <span class="tag tag-new">New</span>
+          <span>18+ production-ready built-in agents across 7 categories: Research, Engineering, Product, Marketing, Business, Operations, and Finance</span>
+        </li>
+        <li>
+          <span class="tag tag-new">New</span>
+          <span><code class="inline-code">axiom list</code> — list all available agents with descriptions and categories</span>
+        </li>
+        <li>
+          <span class="tag tag-new">New</span>
+          <span><code class="inline-code">axiom try &lt;agent&gt; "input"</code> — run any built-in or custom agent from the terminal</span>
+        </li>
+        <li>
+          <span class="tag tag-new">New</span>
+          <span><code class="inline-code">axiom dashboard</code> — local web dashboard for browsing agents and inspecting run history</span>
+        </li>
+        <li>
+          <span class="tag tag-new">New</span>
+          <span><code class="inline-code">axiom create</code> — interactive wizard to scaffold custom agents saved to <code class="inline-code">.axiom/agents/</code></span>
+        </li>
+        <li>
+          <span class="tag tag-new">New</span>
+          <span><code class="inline-code">axiom init</code> — initialise the <code class="inline-code">.axiom/</code> directory structure in any project</span>
+        </li>
+        <li>
+          <span class="tag tag-new">New</span>
+          <span>Full run persistence — every run is saved to <code class="inline-code">.axiom/runs/</code> with input, output, cost, tokens, duration, and tool calls</span>
+        </li>
+        <li>
+          <span class="tag tag-new">New</span>
+          <span>BYOK authentication — works with <code class="inline-code">ANTHROPIC_API_KEY</code> or <code class="inline-code">CLAUDE_CODE_OAUTH_TOKEN</code></span>
+        </li>
+        <li>
+          <span class="tag tag-new">New</span>
+          <span>Programmatic API — import <code class="inline-code">@axiomcm/agents</code> directly into any Node.js or TypeScript project</span>
+        </li>
+        <li>
+          <span class="tag tag-new">New</span>
+          <span>Three tools available to agents: <code class="inline-code">web_search</code>, <code class="inline-code">web_scrape</code>, <code class="inline-code">file_reader</code></span>
+        </li>
+        <li>
+          <span class="tag tag-new">New</span>
+          <span>Published to npm under the <code class="inline-code">@axiomcm</code> organisation — install globally with <code class="inline-code">npm i -g @axiomcm/cli</code></span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Upcoming -->
+    <div class="changelog-entry" style="opacity: 0.65;">
+      <div class="changelog-version" style="color: var(--muted);">@axiomcm/cli@0.2.0</div>
+      <div class="changelog-date">Coming soon</div>
+      <h2 style="color: var(--muted);">On the roadmap</h2>
+
+      <ul class="changelog-list">
+        <li>
+          <span class="tag tag-imp">Soon</span>
+          <span>v2 proxy tier — run agents without your own Anthropic key via a managed subscription</span>
+        </li>
+        <li>
+          <span class="tag tag-imp">Soon</span>
+          <span>More built-in agents across additional categories</span>
+        </li>
+        <li>
+          <span class="tag tag-imp">Soon</span>
+          <span>Agent chaining — pipe the output of one agent into another</span>
+        </li>
+        <li>
+          <span class="tag tag-imp">Soon</span>
+          <span>Dashboard improvements: aggregate cost view, run search, and export</span>
+        </li>
+        <li>
+          <span class="tag tag-imp">Soon</span>
+          <span><code class="inline-code">axiom watch</code> — run an agent on a schedule and persist results</span>
+        </li>
+      </ul>
+
+      <div style="margin-top: 24px;">
+        <p style="color: var(--muted); font-size: 14px; margin-bottom: 16px;">Want to influence the roadmap? Join the waitlist for v2 and tell us what you need.</p>
+        <a href="index.html#waitlist" class="btn btn-outline">Join the v2 waitlist →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="index.html" class="wordmark" style="font-size:18px;">axio<em>m</em></a>
+    <div class="footer-links">
+      <a href="https://www.npmjs.com/org/axiomcm" target="_blank">npm</a>
+      <a href="agents.html">Agents</a>
+      <a href="docs.html">Docs</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="changelog.html">Changelog</a>
+    </div>
+    <div class="footer-right">Made with ☕ &nbsp;·&nbsp; MIT &nbsp;·&nbsp; © axiom 2026</div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

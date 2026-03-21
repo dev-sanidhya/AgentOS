@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>axiom — AI agent library for developers</title>
+  <meta name="description" content="18+ production-ready AI agents. Install in seconds, run with your Anthropic key. Research, writing, code review, analysis, and more." />
+  <meta property="og:title" content="axiom — AI agent library for developers" />
+  <meta property="og:description" content="18+ production-ready AI agents. One command." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ─── Nav ─── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="wordmark">axio<em>m</em></a>
+    <div class="nav-links">
+      <a href="agents.html">Agents</a>
+      <a href="docs.html">Docs</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="changelog.html">Changelog</a>
+    </div>
+    <button class="install-chip">
+      <span class="dollar">$</span> npm i -g @axiomcm/cli <span style="opacity:.5;">⎘</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ─── Hero ─── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">
+          <span class="dot"></span>
+          v0.1.0 is live on npm
+        </div>
+
+        <h1>Your entire AI agent<br>stack, <em>pre-built.</em></h1>
+
+        <p class="hero-sub">
+          axiom gives you 18+ production-ready agents for research, writing, code review, and analysis —
+          installable in seconds with your own Anthropic key.
+        </p>
+
+        <div class="hero-actions">
+          <div class="terminal-block">
+            <span class="prompt">$</span>
+            npm install -g @axiomcm/cli
+            <button class="copy-btn" onclick="copyText('npm install -g @axiomcm/cli', this)">copy</button>
+          </div>
+          <a href="agents.html" class="btn btn-outline">Browse agents →</a>
+          <a href="docs.html" class="btn btn-outline">Read the docs →</a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-terminal">
+          <div class="terminal-bar">
+            <span class="t-dot t-red"></span>
+            <span class="t-dot t-yellow"></span>
+            <span class="t-dot t-green"></span>
+            <span class="t-title">axiom — zsh</span>
+          </div>
+          <div class="terminal-body">
+            <p class="t-line t-d0"><span class="t-prompt">$</span> axiom try research-agent</p>
+            <p class="t-line t-d1"><span class="t-muted">? What should I research? </span>Top AI frameworks in 2026</p>
+            <p class="t-line t-d2 t-gap"></p>
+            <p class="t-line t-d2"><span class="t-spin">⠋</span> Running <span class="t-amber">Research Agent</span>...</p>
+            <p class="t-line t-d3"><span class="t-ok">✓</span> Searching the web<span class="t-muted"> ····················· done</span></p>
+            <p class="t-line t-d4"><span class="t-ok">✓</span> Reading 12 sources<span class="t-muted"> ················· done</span></p>
+            <p class="t-line t-d5"><span class="t-ok">✓</span> Synthesizing report<span class="t-muted"> ················ done</span></p>
+            <p class="t-line t-d6 t-gap"></p>
+            <p class="t-line t-d6 t-output">## Top AI Frameworks in 2026</p>
+            <p class="t-line t-d7 t-output">The landscape has shifted significantly,</p>
+            <p class="t-line t-d7 t-output">with agentic tooling leading adoption...</p>
+            <p class="t-line t-d8 t-gap"></p>
+            <p class="t-line t-d8"><span class="t-muted">Done in 4.2s · </span><span class="t-amber">$0.0142</span><span class="t-muted"> · 3,891 tokens</span></p>
+            <p class="t-line t-d9 t-cursor-line"><span class="t-prompt">$</span> <span class="t-cursor">▌</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- How it works -->
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">Step 01</div>
+        <h3>Install</h3>
+        <p>One global command. Works on Mac, Linux, and Windows with Node 18+.</p>
+        <code class="step-code"><span class="p">$</span> npm install -g @axiomcm/cli</code>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 02</div>
+        <h3>Set your key</h3>
+        <p>Bring your own Anthropic API key. No proxy, no account, no lock-in.</p>
+        <code class="step-code"><span class="p">$</span> export ANTHROPIC_API_KEY=sk-ant-...</code>
+      </div>
+      <div class="step">
+        <div class="step-num">Step 03</div>
+        <h3>Run any agent</h3>
+        <p>18+ agents ready instantly. Or scaffold your own with <code>axiom create</code>.</p>
+        <code class="step-code"><span class="p">$</span> axiom try research "AI trends 2026"</code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Agent spotlight ─── -->
+<section class="section">
+  <div class="container">
+    <div class="section-label">Agent Catalog</div>
+    <h2 class="section-title">Built for real work</h2>
+    <p class="section-sub">Not toy demos. Each agent is production-tested, prompt-engineered, and drops straight into your workflow.</p>
+
+    <div class="agents-grid">
+      <div class="agent-card c-research" data-category="Research">
+        <div class="agent-top">
+          <div class="agent-name">Research Agent</div>
+          <span class="pill pill-cat c-research">Research</span>
+        </div>
+        <div class="agent-desc">Deep research on any topic using web search and synthesis. Returns structured, cited findings.</div>
+        <div class="agent-pills">
+          <span class="pill pill-tool">web_search</span>
+          <span class="pill pill-tool">web_scrape</span>
+        </div>
+        <div class="run-cmd" onclick="copyText('axiom try research &quot;your topic here&quot;', this)">
+          <span class="run-cmd-text">$ axiom try research "your topic"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-product" data-category="Product">
+        <div class="agent-top">
+          <div class="agent-name">PRD Writer</div>
+          <span class="pill pill-cat c-product">Product</span>
+        </div>
+        <div class="agent-desc">Generates structured product requirement documents from a brief description — sections, user stories, and acceptance criteria.</div>
+        <div class="agent-pills"><span class="pill pill-tool">No external tools</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try prd-writer &quot;your feature&quot;', this)">
+          <span class="run-cmd-text">$ axiom try prd-writer "your feature"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-engineering" data-category="Engineering">
+        <div class="agent-top">
+          <div class="agent-name">Code Reviewer</div>
+          <span class="pill pill-cat c-engineering">Engineering</span>
+        </div>
+        <div class="agent-desc">Reviews code for bugs, style issues, security vulnerabilities, and improvement opportunities.</div>
+        <div class="agent-pills"><span class="pill pill-tool">file_reader</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try code-review &quot;review my auth module&quot;', this)">
+          <span class="run-cmd-text">$ axiom try code-review "review my auth"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-business" data-category="Business">
+        <div class="agent-top">
+          <div class="agent-name">Competitor Analyzer</div>
+          <span class="pill pill-cat c-business">Business</span>
+        </div>
+        <div class="agent-desc">Analyzes competitors and surfaces positioning opportunities, pricing gaps, and messaging weaknesses.</div>
+        <div class="agent-pills">
+          <span class="pill pill-tool">web_search</span>
+          <span class="pill pill-tool">web_scrape</span>
+        </div>
+        <div class="run-cmd" onclick="copyText('axiom try competitor-analyzer &quot;vs Notion&quot;', this)">
+          <span class="run-cmd-text">$ axiom try competitor-analyzer "vs Notion"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-marketing" data-category="Marketing">
+        <div class="agent-top">
+          <div class="agent-name">Content Writer</div>
+          <span class="pill pill-cat c-marketing">Marketing</span>
+        </div>
+        <div class="agent-desc">Creates polished blog posts, landing page copy, and product marketing content from a one-line brief.</div>
+        <div class="agent-pills"><span class="pill pill-tool">No external tools</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try content-writer &quot;launch post&quot;', this)">
+          <span class="run-cmd-text">$ axiom try content-writer "launch post"</span><span>⎘</span>
+        </div>
+      </div>
+
+      <div class="agent-card c-operations" data-category="Operations">
+        <div class="agent-top">
+          <div class="agent-name">Meeting Summarizer</div>
+          <span class="pill pill-cat c-operations">Operations</span>
+        </div>
+        <div class="agent-desc">Condenses meeting transcripts into actions, decisions, and owners. Paste raw transcript, get a clean summary.</div>
+        <div class="agent-pills"><span class="pill pill-tool">No external tools</span></div>
+        <div class="run-cmd" onclick="copyText('axiom try meeting-summarizer &quot;paste transcript&quot;', this)">
+          <span class="run-cmd-text">$ axiom try meeting-summarizer "transcript"</span><span>⎘</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-10 flex-center">
+      <a href="agents.html" class="btn btn-outline">See all 18+ agents →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Dashboard ─── -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-label">Local Dashboard</div>
+    <h2 class="section-title">A UI that lives on<br>your machine</h2>
+    <p class="section-sub">Browse the full agent catalog, inspect every run, track cost and token usage — all locally, no account required.</p>
+
+    <div class="terminal-block mt-6" style="display:inline-flex;">
+      <span class="prompt">$</span> axiom dashboard
+    </div>
+
+    <div class="screenshot-wrap" style="aspect-ratio:16/9; overflow:hidden;">
+      <img
+        src="assets/dashboard.svg"
+        alt="axiom local dashboard"
+        loading="lazy"
+        style="width:100%; height:100%; object-fit:cover; display:block;"
+      />
+    </div>
+
+    <div class="features-grid" style="margin-top:32px;">
+      <div class="feature-card">
+        <div class="feature-icon">🗂</div>
+        <h3>Agent Catalog</h3>
+        <p>Browse all 18+ built-in agents and any custom agents you've saved. Filter by category, select, and run — all in the browser.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Run History</h3>
+        <p>Every run is persisted locally in <code class="inline-code">.axiom/runs/</code>. Filter by status, date range, or agent. Inspect input, output, and tool calls.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💸</div>
+        <h3>Cost Tracking</h3>
+        <p>See the exact cost and token count for every run. Know exactly what you're spending before it becomes a surprise on your Anthropic bill.</p>
+      </div>
+    </div>
+
+    <div class="mt-10 flex-center">
+      <a href="dashboard.html" class="btn btn-outline">Learn more about the dashboard →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Why axiom ─── -->
+<section class="section">
+  <div class="container">
+    <div class="section-label">Why axiom</div>
+    <h2 class="section-title">Don't build what already exists</h2>
+    <p class="section-sub">Spinning up AI agents from scratch takes weeks. axiom ships what you actually need, today.</p>
+
+    <div class="compare-grid">
+      <div class="compare-col">
+        <h3>Building yourself</h3>
+        <div class="compare-item"><span class="compare-icon" style="color:var(--muted)">✗</span> Weeks of prompt engineering</div>
+        <div class="compare-item"><span class="compare-icon" style="color:var(--muted)">✗</span> No prebuilt agents — start from zero</div>
+        <div class="compare-item"><span class="compare-icon" style="color:var(--muted)">✗</span> No run history or cost tracking</div>
+        <div class="compare-item"><span class="compare-icon" style="color:var(--muted)">✗</span> No dashboard, no visibility</div>
+        <div class="compare-item"><span class="compare-icon" style="color:var(--muted)">✗</span> Custom agent builder from scratch</div>
+      </div>
+      <div class="compare-col featured">
+        <h3>axiom ✦</h3>
+        <div class="compare-item"><span class="compare-icon">✓</span> Ready in under 2 minutes</div>
+        <div class="compare-item"><span class="compare-icon">✓</span> 18+ agents across 7 categories</div>
+        <div class="compare-item"><span class="compare-icon">✓</span> Full run history + cost tracking</div>
+        <div class="compare-item"><span class="compare-icon">✓</span> Local dashboard, zero setup</div>
+        <div class="compare-item"><span class="compare-icon">✓</span> Custom agent builder built in</div>
+      </div>
+      <div class="compare-col">
+        <h3>Heavy frameworks</h3>
+        <div class="compare-item"><span class="compare-icon" style="color:var(--muted)">✗</span> Complex abstractions to learn</div>
+        <div class="compare-item"><span class="compare-icon" style="color:var(--muted)">✗</span> Code-first, no prebuilt agents</div>
+        <div class="compare-item"><span class="compare-icon" style="color:var(--muted)">✗</span> Basic or no cost tracking</div>
+        <div class="compare-item"><span class="compare-icon" style="color:var(--muted)">✗</span> No visual dashboard</div>
+        <div class="compare-item"><span class="compare-icon" style="color:var(--muted)">✗</span> High boilerplate overhead</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Waitlist ─── -->
+<section class="waitlist-section">
+  <div class="container">
+    <div class="section-label">v2 Coming Soon</div>
+    <h2 class="section-title">No API key required.</h2>
+    <p>We're building a managed proxy tier — pay a flat monthly rate and run any agent without your own Anthropic key. Be first in line.</p>
+
+    <form
+      id="waitlist-form"
+      action="https://formsubmit.co/ajax/shishodiasanidhya@gmail.com"
+      method="POST"
+    >
+      <input type="hidden" name="_subject" value="New axiom waitlist signup" />
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_template" value="table" />
+      <div class="email-form">
+        <input
+          class="email-input"
+          type="email"
+          name="email"
+          placeholder="your@email.com"
+          required
+        />
+        <button class="btn btn-accent" type="submit">Notify me</button>
+      </div>
+    </form>
+    <div id="form-success" class="form-success">
+      ✓ You're on the list — we'll reach out as soon as v2 is ready.
+    </div>
+  </div>
+</section>
+
+<!-- ─── Footer ─── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <a href="index.html" class="wordmark" style="font-size:18px;">axio<em>m</em></a>
+    <div class="footer-links">
+      <a href="https://www.npmjs.com/org/axiomcm" target="_blank">npm</a>
+      <a href="agents.html">Agents</a>
+      <a href="docs.html">Docs</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="changelog.html">Changelog</a>
+    </div>
+    <div class="footer-right">Made with ☕ &nbsp;·&nbsp; MIT &nbsp;·&nbsp; © axiom 2026</div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>
