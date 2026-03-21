@@ -288,7 +288,8 @@ code, pre, .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.875em;
 /* Features grid */
 .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
 .feature-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; }
-.feature-icon { font-size: 26px; margin-bottom: 14px; }
+.feature-icon { display: flex; align-items: center; margin-bottom: 16px; }
+.feature-icon svg { display: block; flex-shrink: 0; }
 .feature-card h3 { font-size: 16px; margin-bottom: 8px; }
 .feature-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
 
