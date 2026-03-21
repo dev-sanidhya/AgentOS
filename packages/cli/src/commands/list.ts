@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { getBuiltInAgents } from "@axiom/agents";
+import { getBuiltInAgents } from "@axiomcm/agents";
 
 export function listAgents(): void {
   const agents = getBuiltInAgents();
@@ -25,7 +25,7 @@ export function listAgents(): void {
       }`
     );
     console.log(
-      `  ${chalk.gray("Import:")} ${chalk.white(`import { ${agent.name.replace(/\s+/g, "")} } from '@axiom/agents';`)}`
+      `  ${chalk.gray("Import:")} ${chalk.white(`import { ${agent.name.replace(/\s+/g, "")} } from '@axiomcm/agents';`)}`
     );
     console.log(
       `  ${chalk.gray("Try:   ")} ${chalk.white(`axiom try ${agent.slug}`)}`

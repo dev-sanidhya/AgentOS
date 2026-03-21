@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import ora from "ora";
 import inquirer from "inquirer";
-import { createAgent, saveAgent } from "@axiom/agents";
+import { createAgent, saveAgent } from "@axiomcm/agents";
 import { configureRuntime } from "../support";
 
 export async function createAgentCommand(): Promise<void> {
@@ -114,7 +114,7 @@ export async function createAgentCommand(): Promise<void> {
 
     console.log(chalk.gray("  Use in code:"));
     console.log(
-      chalk.white("    import { createAgent, loadAgent } from '@axiom/agents';")
+      chalk.white("    import { createAgent, loadAgent } from '@axiomcm/agents';")
     );
     console.log(
       chalk.white(

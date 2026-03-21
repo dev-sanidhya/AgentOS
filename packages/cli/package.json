@@ -1,5 +1,5 @@
 {
-  "name": "@axiom/cli",
+  "name": "@axiomcm/cli",
   "version": "0.1.0",
   "description": "CLI for axiom - try, build, and manage AI agents",
   "main": "dist/index.js",
@@ -30,8 +30,8 @@
     "url": "https://github.com/dev-sanidhya/axiom"
   },
   "dependencies": {
-    "@axiom/agents": "workspace:*",
-    "@axiom/dashboard": "workspace:*",
+    "@axiomcm/agents": "workspace:*",
+    "@axiomcm/dashboard": "workspace:*",
     "chalk": "^4.1.2",
     "commander": "^12.0.0",
     "dotenv": "^16.4.1",

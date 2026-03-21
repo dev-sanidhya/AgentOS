@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(node -e \":*)",
+      "Bash(netstat -ano)",
+      "Bash(cmd.exe /c \"netstat -ano | findstr :4444\")",
+      "Bash(pnpm --filter @axiomcm/agents build)",
+      "Bash(pnpm --filter @axiomcm/dashboard build)",
+      "Bash(pnpm --filter @axiomcm/cli build)",
+      "Bash(pnpm --filter @axiomcm/agents publish --access public --no-git-checks)",
+      "Bash(npm set:*)",
+      "Bash(pnpm --filter @axiomcm/dashboard publish --access public --no-git-checks)",
+      "Bash(pnpm --filter @axiomcm/cli publish --access public --no-git-checks)",
+      "Bash(npm info:*)"
+    ]
+  }
+}

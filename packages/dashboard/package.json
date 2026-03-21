@@ -1,5 +1,5 @@
 {
-  "name": "@axiom/dashboard",
+  "name": "@axiomcm/dashboard",
   "version": "0.1.0",
   "description": "Local dashboard for axiom run history and agent catalog",
   "main": "dist/index.js",
@@ -15,7 +15,7 @@
     "test": "echo 'Dashboard tests run via workspace root'"
   },
   "dependencies": {
-    "@axiom/agents": "workspace:*"
+    "@axiomcm/agents": "workspace:*"
   },
   "license": "MIT",
   "engines": {

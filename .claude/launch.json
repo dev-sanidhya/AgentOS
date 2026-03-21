@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "axiom-dashboard-preview",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [".claude/preview-server.js"],
+      "port": 4444,
+      "autoPort": true
+    }
+  ]
+}

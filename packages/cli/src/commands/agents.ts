@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { listSavedAgentDefinitions } from "@axiom/agents";
+import { listSavedAgentDefinitions } from "@axiomcm/agents";
 
 export async function listCustomAgents(): Promise<void> {
   const agents = await listSavedAgentDefinitions();

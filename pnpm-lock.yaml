@@ -72,10 +72,10 @@ importers:
 
   packages/cli:
     dependencies:
-      '@agentos/agents':
+      '@axiomcm/agents':
         specifier: workspace:*
         version: link:../agents
-      '@agentos/dashboard':
+      '@axiomcm/dashboard':
         specifier: workspace:*
         version: link:../dashboard
       chalk:
@@ -106,7 +106,7 @@ importers:
 
   packages/dashboard:
     dependencies:
-      '@agentos/agents':
+      '@axiomcm/agents':
         specifier: workspace:*
         version: link:../agents
 

@@ -1,6 +1,6 @@
 import path from "path";
 import chalk from "chalk";
-import { configure } from "@axiom/agents";
+import { configure } from "@axiomcm/agents";
 
 export function configureRuntime(): boolean {
   const oauthToken = process.env.CLAUDE_CODE_OAUTH_TOKEN;

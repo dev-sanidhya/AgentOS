@@ -9,7 +9,7 @@ import {
   listRunRecords,
   listSavedAgentDefinitions,
   loadAgent,
-} from "@axiom/agents";
+} from "@axiomcm/agents";
 
 export interface DashboardOptions {
   projectDir?: string;
@@ -60,254 +60,431 @@ function dashboardPage(projectName: string): string {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>axiom Dashboard</title>
+    <title>axiom — ${projectName}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --bg: #f5efe4;
-        --panel: rgba(255, 250, 241, 0.92);
-        --ink: #1f2933;
-        --muted: #5f6c76;
-        --accent: #a53f2b;
-        --accent-soft: #f0c2a8;
-        --line: rgba(31, 41, 51, 0.12);
-        --shadow: 0 20px 60px rgba(65, 49, 32, 0.12);
+        --bg-from: #f7f0e3;
+        --bg-to: #ece3cf;
+        --panel: rgba(255, 251, 244, 0.88);
+        --panel-border: rgba(255, 255, 255, 0.72);
+        --ink: #1a1f2e;
+        --ink-2: #374151;
+        --muted: #6b7280;
+        --accent: #b45309;
+        --accent-light: rgba(180, 83, 9, 0.09);
+        --accent-ring: rgba(180, 83, 9, 0.18);
+        --success: #059669;
+        --success-light: rgba(5, 150, 105, 0.09);
+        --danger: #dc2626;
+        --danger-light: rgba(220, 38, 38, 0.09);
+        --line: rgba(26, 31, 46, 0.09);
+        --shadow-panel: 0 32px 72px rgba(65, 49, 32, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
+        --shadow-card: 0 4px 18px rgba(0, 0, 0, 0.07);
+        --r: 22px;
+        --r-sm: 13px;
+        --r-xs: 9px;
       }
-      * { box-sizing: border-box; }
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
       body {
-        margin: 0;
-        font-family: "Segoe UI", "Aptos", sans-serif;
+        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        font-size: 14px;
+        line-height: 1.55;
         color: var(--ink);
         background:
-          radial-gradient(circle at top left, rgba(165, 63, 43, 0.16), transparent 30%),
-          radial-gradient(circle at bottom right, rgba(42, 102, 79, 0.15), transparent 25%),
-          linear-gradient(135deg, #f7f0e2, #ebe2d0);
+          radial-gradient(ellipse at 4% 4%, rgba(180, 83, 9, 0.14) 0%, transparent 42%),
+          radial-gradient(ellipse at 96% 96%, rgba(16, 93, 63, 0.13) 0%, transparent 42%),
+          radial-gradient(ellipse at 50% 0%, rgba(245, 239, 228, 0.9) 0%, transparent 60%),
+          linear-gradient(155deg, var(--bg-from) 0%, var(--bg-to) 100%);
         min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
       }
-      .shell {
-        max-width: 1440px;
-        margin: 0 auto;
-        padding: 32px 20px 40px;
-      }
-      .hero {
+
+      .shell { max-width: 1460px; margin: 0 auto; padding: 36px 28px 72px; }
+
+      /* ── Header ── */
+      .header {
         display: flex;
+        align-items: center;
         justify-content: space-between;
+        margin-bottom: 30px;
         gap: 16px;
-        align-items: end;
-        margin-bottom: 20px;
       }
-      .hero h1 {
-        margin: 0;
-        font-size: 40px;
-        line-height: 1;
-        letter-spacing: -0.04em;
+      .wordmark {
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.055em;
+        color: var(--ink);
+        user-select: none;
       }
-      .hero p {
-        margin: 8px 0 0;
-        color: var(--muted);
-        max-width: 720px;
-      }
+      .wordmark em { color: var(--accent); font-style: normal; }
+      .header-meta { display: flex; align-items: center; gap: 10px; }
       .badge {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 8px 12px;
+        gap: 7px;
+        padding: 5px 13px;
         border: 1px solid var(--line);
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(10px);
+        font-size: 12px;
+        font-weight: 500;
         color: var(--muted);
       }
-      .grid {
-        display: grid;
-        grid-template-columns: 1.2fr 1fr;
-        gap: 20px;
+      .live-dot {
+        width: 7px; height: 7px;
+        border-radius: 50%;
+        background: var(--success);
+        box-shadow: 0 0 0 2.5px rgba(5, 150, 105, 0.22);
+        flex-shrink: 0;
+        animation: pulse 2.4s ease-in-out infinite;
       }
+      @keyframes pulse {
+        0%, 100% { box-shadow: 0 0 0 2.5px rgba(5, 150, 105, 0.22); }
+        50%       { box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.12); }
+      }
+
+      /* ── Grid ── */
+      .grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 22px; }
+
+      /* ── Panel ── */
       .panel {
         background: var(--panel);
-        border: 1px solid rgba(255,255,255,0.6);
-        border-radius: 24px;
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(14px);
+        border: 1px solid var(--panel-border);
+        border-radius: var(--r);
+        box-shadow: var(--shadow-panel);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         overflow: hidden;
       }
       .panel-header {
-        padding: 18px 20px 14px;
+        padding: 22px 26px 18px;
         border-bottom: 1px solid var(--line);
-      }
-      .panel-header h2 {
-        margin: 0;
-        font-size: 18px;
-      }
-      .panel-header p {
-        margin: 6px 0 0;
-        color: var(--muted);
-        font-size: 14px;
-      }
-      .panel-body {
-        padding: 18px 20px 20px;
-      }
-      .filters, .composer {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
         gap: 12px;
-        margin-bottom: 16px;
       }
-      .composer {
-        grid-template-columns: 1fr auto;
+      .panel-header-text h2 {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 2px;
+        letter-spacing: -0.01em;
       }
-      label {
-        display: block;
-        font-size: 12px;
+      .panel-header-text p { color: var(--muted); font-size: 12.5px; }
+      .panel-header-text code {
+        font-family: ui-monospace, 'Cascadia Code', monospace;
+        font-size: 11.5px;
+        background: var(--accent-light);
+        color: var(--accent);
+        padding: 1px 5px;
+        border-radius: 4px;
+      }
+      .panel-count {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--accent);
+        letter-spacing: -0.04em;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+      .panel-body { padding: 20px 26px 26px; }
+
+      /* ── Controls ── */
+      .controls-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .field { display: flex; flex-direction: column; gap: 5px; }
+      .field-label {
+        font-size: 10.5px;
+        font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
         color: var(--muted);
-        margin-bottom: 6px;
       }
-      select, textarea, button {
+      select, textarea {
         width: 100%;
-        border-radius: 14px;
+        border-radius: var(--r-sm);
         border: 1px solid var(--line);
-        padding: 12px 14px;
+        padding: 8px 12px;
         font: inherit;
-      }
-      textarea {
-        min-height: 92px;
-        resize: vertical;
-        background: rgba(255,255,255,0.8);
+        font-size: 13px;
+        background: rgba(255, 255, 255, 0.68);
+        color: var(--ink);
+        outline: none;
+        transition: border-color .15s ease, box-shadow .15s ease;
+        -webkit-appearance: none;
       }
       select {
-        background: rgba(255,255,255,0.8);
-      }
-      button {
-        background: var(--ink);
-        color: white;
-        border: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' fill='none'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 11px center;
+        padding-right: 30px;
         cursor: pointer;
-        transition: transform .15s ease, opacity .15s ease;
       }
-      button:hover { transform: translateY(-1px); }
-      button.secondary {
-        background: rgba(31, 41, 51, 0.08);
-        color: var(--ink);
+      select:focus, textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-ring);
+        background: rgba(255, 255, 255, 0.9);
+      }
+      textarea { min-height: 84px; resize: vertical; line-height: 1.5; }
+
+      .composer-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: end;
+        margin-bottom: 18px;
+      }
+
+      /* ── Buttons ── */
+      .btn {
+        border-radius: var(--r-sm);
+        border: none;
+        padding: 9px 20px;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform .14s ease, box-shadow .14s ease, opacity .14s ease, background .14s ease;
+        white-space: nowrap;
+        letter-spacing: -0.01em;
+      }
+      .btn:hover:not(:disabled) { transform: translateY(-1.5px); box-shadow: 0 5px 16px rgba(0,0,0,0.15); }
+      .btn:active:not(:disabled) { transform: translateY(0); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+      .btn:disabled { opacity: 0.52; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+      .btn-primary { background: var(--ink); color: #fff; }
+      .btn-ghost {
+        background: rgba(26, 31, 46, 0.07);
+        color: var(--ink-2);
         border: 1px solid var(--line);
       }
-      .list {
-        display: grid;
+      .btn-ghost:hover:not(:disabled) { background: rgba(26, 31, 46, 0.11); }
+      .btn-selected { background: var(--accent) !important; color: #fff !important; border-color: transparent !important; box-shadow: 0 3px 10px var(--accent-ring) !important; }
+
+      /* ── Loading bar ── */
+      .run-loading {
+        display: none;
+        align-items: center;
         gap: 10px;
-        max-height: 620px;
-        overflow: auto;
-        padding-right: 4px;
+        padding: 10px 15px;
+        border-radius: var(--r-sm);
+        background: var(--accent-light);
+        border: 1px solid var(--accent-ring);
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 14px;
       }
+      .run-loading.visible { display: flex; }
+      .spinner {
+        width: 15px; height: 15px;
+        border: 2px solid var(--accent-ring);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin .65s linear infinite;
+        flex-shrink: 0;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* ── Lists ── */
+      .list { display: grid; gap: 9px; max-height: 490px; overflow-y: auto; padding-right: 3px; }
+      .list::-webkit-scrollbar { width: 3px; }
+      .list::-webkit-scrollbar-track { background: transparent; }
+      .list::-webkit-scrollbar-thumb { background: rgba(26,31,46,0.15); border-radius: 3px; }
+
+      /* ── Cards ── */
       .card {
         border: 1px solid var(--line);
-        border-radius: 18px;
-        padding: 14px;
-        background: rgba(255,255,255,0.7);
+        border-radius: 15px;
+        padding: 13px 15px 13px;
+        background: rgba(255, 255, 255, 0.55);
+        transition: background .15s ease, box-shadow .15s ease, transform .15s ease, border-color .15s ease;
       }
-      .card strong { display: block; font-size: 16px; margin-bottom: 4px; }
-      .card p { margin: 0 0 10px; color: var(--muted); font-size: 14px; }
-      .meta, .tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 10px;
+      .card:hover {
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow: var(--shadow-card);
+        transform: translateY(-1px);
+        border-color: rgba(255,255,255,0.9);
       }
+      .card-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; letter-spacing: -0.01em; }
+      .card-sub { font-size: 12px; color: var(--muted); margin-bottom: 9px; }
+      .card-desc { font-size: 13px; color: var(--muted); margin-bottom: 10px; line-height: 1.45; }
+      .card-actions { display: flex; gap: 7px; margin-top: 11px; }
+
+      /* ── Pills ── */
+      .pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 9px; }
       .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 9px;
         border-radius: 999px;
-        background: rgba(165, 63, 43, 0.1);
-        color: var(--accent);
-        padding: 6px 10px;
-        font-size: 12px;
+        font-size: 11.5px;
+        font-weight: 500;
+        line-height: 1.5;
       }
-      .meta .pill {
-        background: rgba(31, 41, 51, 0.08);
+      .pill-neutral { background: rgba(26,31,46,0.07); color: var(--ink-2); }
+      .pill-accent  { background: var(--accent-light); color: var(--accent); }
+      .pill-success { background: var(--success-light); color: var(--success); }
+      .pill-danger  { background: var(--danger-light);  color: var(--danger); }
+      .pill-muted   { background: rgba(26,31,46,0.05);  color: var(--muted); }
+
+      .dot { width: 5.5px; height: 5.5px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+      .dot-success { background: var(--success); }
+      .dot-danger  { background: var(--danger); }
+
+      /* ── Empty ── */
+      .empty {
+        padding: 36px 20px;
+        text-align: center;
+        border: 1.5px dashed var(--line);
+        border-radius: 15px;
         color: var(--muted);
+        background: rgba(255, 255, 255, 0.28);
       }
-      .actions {
-        display: flex;
-        gap: 8px;
+      .empty-icon { font-size: 28px; margin-bottom: 8px; opacity: .65; }
+      .empty p { font-size: 13px; line-height: 1.55; }
+
+      /* ── Run detail ── */
+      .detail-panel { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+      .detail-title {
+        font-size: 10.5px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 12px;
       }
-      .run-detail pre {
+      .detail-empty {
+        padding: 22px;
+        text-align: center;
+        border: 1.5px dashed var(--line);
+        border-radius: var(--r-sm);
+        color: var(--muted);
+        font-size: 13px;
+        background: rgba(255,255,255,0.3);
+      }
+      .detail-section { margin-bottom: 12px; }
+      .detail-section-label {
+        font-size: 10.5px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 5px;
+      }
+      pre {
         white-space: pre-wrap;
         word-break: break-word;
-        padding: 12px;
-        border-radius: 16px;
-        background: rgba(31, 41, 51, 0.05);
+        padding: 11px 13px;
+        border-radius: var(--r-xs);
+        background: rgba(26, 31, 46, 0.05);
         border: 1px solid var(--line);
+        font-size: 11.5px;
+        max-height: 160px;
+        overflow-y: auto;
+        font-family: ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
+        line-height: 1.55;
+        color: var(--ink-2);
       }
-      .empty {
-        border: 1px dashed var(--line);
-        padding: 18px;
-        border-radius: 18px;
-        color: var(--muted);
-        background: rgba(255,255,255,0.4);
-      }
-      @media (max-width: 980px) {
+      pre::-webkit-scrollbar { width: 3px; height: 3px; }
+      pre::-webkit-scrollbar-thumb { background: rgba(26,31,46,0.15); border-radius: 3px; }
+
+      /* ── Divider ── */
+      .divider { height: 1px; background: var(--line); margin: 14px 0; }
+
+      @media (max-width: 1000px) {
         .grid { grid-template-columns: 1fr; }
-        .filters, .composer { grid-template-columns: 1fr; }
+        .controls-row, .composer-row { grid-template-columns: 1fr; }
       }
     </style>
   </head>
   <body>
     <div class="shell">
-      <div class="hero">
-        <div>
-          <div class="badge">Project: ${projectName}</div>
-          <h1>axiom Dashboard</h1>
-          <p>Catalog your built-in and custom agents, inspect local run history, and trigger runs without leaving the project.</p>
+      <header class="header">
+        <div class="wordmark">axio<em>m</em></div>
+        <div class="header-meta">
+          <div class="badge">
+            <span class="live-dot"></span>
+            ${projectName}
+          </div>
         </div>
-      </div>
+      </header>
+
       <div class="grid">
+        <!-- Left: Agent Catalog -->
         <section class="panel">
           <div class="panel-header">
-            <h2>Agent Catalog</h2>
-            <p>Prebuilt agents and saved custom agents from <code>.axiom/agents</code>.</p>
+            <div class="panel-header-text">
+              <h2>Agent Catalog</h2>
+              <p>Built-in agents and saved custom agents from <code>.axiom/agents</code></p>
+            </div>
+            <div class="panel-count" id="agent-count">—</div>
           </div>
           <div class="panel-body">
-            <div class="filters">
-              <div>
-                <label for="agent-kind">Kind</label>
+            <div class="controls-row">
+              <div class="field">
+                <div class="field-label">Kind</div>
                 <select id="agent-kind">
                   <option value="">All</option>
                   <option value="built_in">Built in</option>
                   <option value="custom">Custom</option>
                 </select>
               </div>
-              <div>
-                <label for="agent-category">Category</label>
+              <div class="field">
+                <div class="field-label">Category</div>
                 <select id="agent-category">
                   <option value="">All</option>
                 </select>
               </div>
             </div>
-            <div class="composer">
-              <div>
-                <label for="run-input">Run selected agent</label>
-                <textarea id="run-input" placeholder="Describe what the agent should do..."></textarea>
-              </div>
-              <div style="display:flex;align-items:end;">
-                <button id="run-agent">Run Agent</button>
-              </div>
+
+            <div class="run-loading" id="run-loading">
+              <div class="spinner"></div>
+              Running agent — this may take a moment…
             </div>
+
+            <div class="composer-row">
+              <div class="field">
+                <div class="field-label">Input for selected agent</div>
+                <textarea id="run-input" placeholder="Describe what the agent should do…"></textarea>
+              </div>
+              <button class="btn btn-primary" id="run-agent">Run</button>
+            </div>
+
             <div id="catalog" class="list"></div>
           </div>
         </section>
+
+        <!-- Right: Run History -->
         <section class="panel">
           <div class="panel-header">
-            <h2>Run History</h2>
-            <p>Runs from <code>.axiom/runs</code>, with filters and deep inspection.</p>
+            <div class="panel-header-text">
+              <h2>Run History</h2>
+              <p>Persisted runs from <code>.axiom/runs</code></p>
+            </div>
+            <div class="panel-count" id="run-count">—</div>
           </div>
           <div class="panel-body">
-            <div class="filters">
-              <div>
-                <label for="run-status">Status</label>
+            <div class="controls-row">
+              <div class="field">
+                <div class="field-label">Status</div>
                 <select id="run-status">
                   <option value="">All</option>
                   <option value="success">Success</option>
                   <option value="error">Error</option>
                 </select>
               </div>
-              <div>
-                <label for="run-days">Date range</label>
+              <div class="field">
+                <div class="field-label">Date Range</div>
                 <select id="run-days">
                   <option value="0">All time</option>
                   <option value="1">Last 24 hours</option>
@@ -316,34 +493,34 @@ function dashboardPage(projectName: string): string {
                 </select>
               </div>
             </div>
+
             <div id="runs" class="list"></div>
-            <div class="run-detail" style="margin-top:16px;">
-              <div class="panel-header" style="padding:0 0 12px;border-bottom:none;">
-                <h2 style="font-size:16px;">Run Detail</h2>
-              </div>
-              <div id="run-detail" class="empty">Select a run to inspect its output, tools, and metadata.</div>
+
+            <div class="detail-panel">
+              <div class="detail-title">Run Detail</div>
+              <div id="run-detail" class="detail-empty">Select a run to inspect its output, tool calls, and metadata.</div>
             </div>
           </div>
         </section>
       </div>
     </div>
+
     <script>
-      const state = {
-        agents: [],
-        runs: [],
-        selectedAgent: null,
-      };
+      const state = { agents: [], runs: [], selectedAgent: null };
 
       const els = {
-        catalog: document.getElementById("catalog"),
-        runs: document.getElementById("runs"),
-        runDetail: document.getElementById("run-detail"),
-        agentKind: document.getElementById("agent-kind"),
+        catalog:       document.getElementById("catalog"),
+        runs:          document.getElementById("runs"),
+        runDetail:     document.getElementById("run-detail"),
+        agentKind:     document.getElementById("agent-kind"),
         agentCategory: document.getElementById("agent-category"),
-        runStatus: document.getElementById("run-status"),
-        runDays: document.getElementById("run-days"),
-        runInput: document.getElementById("run-input"),
-        runAgent: document.getElementById("run-agent"),
+        runStatus:     document.getElementById("run-status"),
+        runDays:       document.getElementById("run-days"),
+        runInput:      document.getElementById("run-input"),
+        runAgent:      document.getElementById("run-agent"),
+        runLoading:    document.getElementById("run-loading"),
+        agentCount:    document.getElementById("agent-count"),
+        runCount:      document.getElementById("run-count"),
       };
 
       async function fetchJson(url, options) {
@@ -355,110 +532,122 @@ function dashboardPage(projectName: string): string {
         return res.json();
       }
 
-      function escapeHtml(value) {
-        return value
+      function esc(v) {
+        return String(v ?? "")
           .replaceAll("&", "&amp;")
           .replaceAll("<", "&lt;")
           .replaceAll(">", "&gt;");
       }
 
       function uniqueCategories() {
-        return [...new Set(state.agents.map((agent) => agent.category))].sort();
+        return [...new Set(state.agents.map((a) => a.category))].sort();
       }
 
       function renderCategoryFilter() {
-        const categories = uniqueCategories();
-        els.agentCategory.innerHTML = '<option value="">All</option>' + categories.map((category) => \`<option value="\${category}">\${category}</option>\`).join("");
+        els.agentCategory.innerHTML =
+          '<option value="">All</option>' +
+          uniqueCategories().map((c) => \`<option value="\${c}">\${c}</option>\`).join("");
       }
 
       function filteredAgents() {
-        return state.agents.filter((agent) => {
-          if (els.agentKind.value && agent.kind !== els.agentKind.value) return false;
-          if (els.agentCategory.value && agent.category !== els.agentCategory.value) return false;
+        return state.agents.filter((a) => {
+          if (els.agentKind.value && a.kind !== els.agentKind.value) return false;
+          if (els.agentCategory.value && a.category !== els.agentCategory.value) return false;
           return true;
         });
       }
 
       function filteredRuns() {
         const days = Number(els.runDays.value);
-        const cutoff = days > 0 ? Date.now() - (days * 24 * 60 * 60 * 1000) : 0;
-
-        return state.runs.filter((run) => {
-          if (els.runStatus.value === "success" && !run.success) return false;
-          if (els.runStatus.value === "error" && run.success) return false;
-          if (cutoff && new Date(run.timestamp).getTime() < cutoff) return false;
+        const cutoff = days > 0 ? Date.now() - days * 86400000 : 0;
+        return state.runs.filter((r) => {
+          if (els.runStatus.value === "success" && !r.success) return false;
+          if (els.runStatus.value === "error" && r.success) return false;
+          if (cutoff && new Date(r.timestamp).getTime() < cutoff) return false;
           return true;
         });
       }
 
       function renderCatalog() {
         const agents = filteredAgents();
-        if (agents.length === 0) {
-          els.catalog.innerHTML = '<div class="empty">No agents match the current filters.</div>';
+        els.agentCount.textContent = agents.length;
+        if (!agents.length) {
+          els.catalog.innerHTML = \`<div class="empty"><div class="empty-icon">🤖</div><p>No agents match the current filters.</p></div>\`;
           return;
         }
-
-        els.catalog.innerHTML = agents.map((agent) => \`
-          <article class="card">
-            <strong>\${agent.name}</strong>
-            <p>\${agent.summary}</p>
-            <div class="meta">
-              <span class="pill">\${agent.kind === "built_in" ? "Built in" : "Custom"}</span>
-              <span class="pill">\${agent.category}</span>
-              <span class="pill">\${agent.allowedTools.length} tools</span>
+        els.catalog.innerHTML = agents.map((a) => {
+          const sel = state.selectedAgent && (state.selectedAgent.id === a.id || state.selectedAgent.slug === a.slug);
+          return \`<article class="card">
+            <div class="card-title">\${esc(a.name)}</div>
+            <div class="card-desc">\${esc(a.summary)}</div>
+            <div class="pills">
+              <span class="pill \${a.kind === "built_in" ? "pill-neutral" : "pill-accent"}">\${a.kind === "built_in" ? "Built in" : "Custom"}</span>
+              <span class="pill pill-muted">\${esc(a.category)}</span>
+              <span class="pill pill-muted">\${a.allowedTools.length} tool\${a.allowedTools.length !== 1 ? "s" : ""}</span>
             </div>
-            <div class="tags">\${agent.tags.map((tag) => \`<span class="pill">\${tag}</span>\`).join("")}</div>
-            <div class="actions">
-              <button class="secondary" data-select-agent="\${agent.id}">Select</button>
+            <div class="pills">\${a.tags.slice(0, 5).map((t) => \`<span class="pill pill-muted">\${esc(t)}</span>\`).join("")}</div>
+            <div class="card-actions">
+              <button class="btn \${sel ? "btn-selected" : "btn-ghost"}" data-select-agent="\${a.id}">\${sel ? "✓ Selected" : "Select"}</button>
             </div>
-          </article>
-        \`).join("");
+          </article>\`;
+        }).join("");
       }
 
       function renderRuns() {
         const runs = filteredRuns();
-        if (runs.length === 0) {
-          els.runs.innerHTML = '<div class="empty">No runs yet. Run an agent from the catalog to populate this view.</div>';
+        els.runCount.textContent = runs.length;
+        if (!runs.length) {
+          els.runs.innerHTML = \`<div class="empty"><div class="empty-icon">📋</div><p>No runs yet.<br>Select an agent and click <strong>Run</strong> to get started.</p></div>\`;
           return;
         }
-
-        els.runs.innerHTML = runs.map((run) => \`
-          <article class="card">
-            <strong>\${run.agent.name}</strong>
-            <p>\${new Date(run.timestamp).toLocaleString()} · \${run.success ? "success" : "error"} · \${run.authMode}</p>
-            <div class="meta">
-              <span class="pill">\${run.cost.toFixed(4)} USD</span>
-              <span class="pill">\${run.tokensUsed.total} tokens</span>
-              <span class="pill">\${run.duration} ms</span>
-            </div>
-            <div class="actions">
-              <button class="secondary" data-open-run="\${run.id}">Inspect</button>
-            </div>
-          </article>
-        \`).join("");
+        els.runs.innerHTML = runs.map((r) => \`<article class="card">
+          <div class="card-title">\${esc(r.agent.name)}</div>
+          <div class="card-sub">\${new Date(r.timestamp).toLocaleString()}</div>
+          <div class="pills">
+            <span class="pill \${r.success ? "pill-success" : "pill-danger"}">
+              <span class="dot \${r.success ? "dot-success" : "dot-danger"}"></span>
+              \${r.success ? "success" : "error"}
+            </span>
+            <span class="pill pill-neutral">$\${r.cost.toFixed(4)}</span>
+            <span class="pill pill-neutral">\${r.tokensUsed?.total ?? "—"} tok</span>
+            <span class="pill pill-neutral">\${(r.duration / 1000).toFixed(1)}s</span>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-ghost" data-open-run="\${r.id}">Inspect</button>
+          </div>
+        </article>\`).join("");
       }
 
       function renderRunDetail(run) {
         if (!run) {
-          els.runDetail.className = "empty";
-          els.runDetail.textContent = "Select a run to inspect its output, tools, and metadata.";
+          els.runDetail.className = "detail-empty";
+          els.runDetail.textContent = "Select a run to inspect its output, tool calls, and metadata.";
           return;
         }
-
         els.runDetail.className = "";
         els.runDetail.innerHTML = \`
-          <div class="meta">
-            <span class="pill">\${run.agent.name}</span>
-            <span class="pill">\${run.success ? "success" : "error"}</span>
-            <span class="pill">\${run.authMode}</span>
-            <span class="pill">\${run.loops} loops</span>
+          <div class="pills" style="margin-bottom:14px;">
+            <span class="pill \${run.success ? "pill-success" : "pill-danger"}">
+              <span class="dot \${run.success ? "dot-success" : "dot-danger"}"></span>
+              \${run.success ? "success" : "error"}
+            </span>
+            <span class="pill pill-neutral">\${esc(run.authMode)}</span>
+            <span class="pill pill-neutral">\${run.loops} loop\${run.loops !== 1 ? "s" : ""}</span>
+            <span class="pill pill-neutral">\${run.tokensUsed?.total ?? "—"} tokens</span>
+            <span class="pill pill-neutral">$\${run.cost.toFixed(4)}</span>
           </div>
-          <p><strong>Input</strong></p>
-          <pre>\${escapeHtml(run.input)}</pre>
-          <p><strong>Output</strong></p>
-          <pre>\${escapeHtml(run.output || run.error || "")}</pre>
-          <p><strong>Tool Calls</strong></p>
-          <pre>\${escapeHtml(JSON.stringify(run.toolCalls, null, 2))}</pre>
+          <div class="detail-section">
+            <div class="detail-section-label">Input</div>
+            <pre>\${esc(run.input)}</pre>
+          </div>
+          <div class="detail-section">
+            <div class="detail-section-label">Output</div>
+            <pre>\${esc(run.output || run.error || "—")}</pre>
+          </div>
+          \${run.toolCalls?.length ? \`<div class="detail-section">
+            <div class="detail-section-label">Tool Calls (\${run.toolCalls.length})</div>
+            <pre>\${esc(JSON.stringify(run.toolCalls, null, 2))}</pre>
+          </div>\` : ""}
         \`;
       }
 
@@ -474,55 +663,43 @@ function dashboardPage(projectName: string): string {
       }
 
       async function runSelectedAgent() {
-        if (!state.selectedAgent) {
-          alert("Select an agent first.");
-          return;
-        }
-        if (!els.runInput.value.trim()) {
-          alert("Provide input for the agent.");
-          return;
-        }
+        if (!state.selectedAgent) { alert("Select an agent first."); return; }
+        if (!els.runInput.value.trim()) { alert("Provide an input for the agent."); return; }
 
         els.runAgent.disabled = true;
-        els.runAgent.textContent = "Running...";
+        els.runLoading.classList.add("visible");
         try {
           const result = await fetchJson("/api/run", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              id: state.selectedAgent.id,
-              kind: state.selectedAgent.kind,
-              input: els.runInput.value,
-            }),
+            body: JSON.stringify({ id: state.selectedAgent.id, kind: state.selectedAgent.kind, input: els.runInput.value }),
           });
-
           els.runInput.value = "";
           await refresh();
           renderRunDetail(result.result);
-        } catch (error) {
-          alert(error.message);
+        } catch (err) {
+          alert(err.message);
         } finally {
           els.runAgent.disabled = false;
-          els.runAgent.textContent = "Run Agent";
+          els.runLoading.classList.remove("visible");
         }
       }
 
-      document.addEventListener("click", async (event) => {
-        const target = event.target;
-        if (!(target instanceof HTMLElement)) return;
+      document.addEventListener("click", async (e) => {
+        const t = e.target;
+        if (!(t instanceof HTMLElement)) return;
 
-        const selectId = target.getAttribute("data-select-agent");
+        const selectId = t.getAttribute("data-select-agent");
         if (selectId) {
-          state.selectedAgent = state.agents.find((agent) => agent.id === selectId || agent.slug === selectId);
-          document.querySelectorAll("[data-select-agent]").forEach((node) => node.textContent = "Select");
-          target.textContent = "Selected";
+          state.selectedAgent = state.agents.find((a) => a.id === selectId || a.slug === selectId) ?? null;
+          renderCatalog();
           return;
         }
 
-        const runId = target.getAttribute("data-open-run");
+        const runId = t.getAttribute("data-open-run");
         if (runId) {
-          const run = await fetchJson("/api/runs/" + runId);
-          renderRunDetail(run.item);
+          const data = await fetchJson("/api/runs/" + runId).catch((err) => { alert(err.message); return null; });
+          if (data) renderRunDetail(data.item);
         }
       });
 
@@ -530,9 +707,10 @@ function dashboardPage(projectName: string): string {
       [els.runStatus, els.runDays].forEach((el) => el.addEventListener("change", renderRuns));
       els.runAgent.addEventListener("click", runSelectedAgent);
 
-      refresh().catch((error) => {
-        els.catalog.innerHTML = '<div class="empty">' + error.message + '</div>';
-        els.runs.innerHTML = '<div class="empty">' + error.message + '</div>';
+      refresh().catch((err) => {
+        const msg = \`<div class="empty"><p>\${esc(err.message)}</p></div>\`;
+        els.catalog.innerHTML = msg;
+        els.runs.innerHTML = msg;
       });
     </script>
   </body>

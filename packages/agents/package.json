@@ -1,5 +1,5 @@
 {
-  "name": "@axiom/agents",
+  "name": "@axiomcm/agents",
   "version": "0.1.0",
   "description": "Importable AI agents, custom agent builder, and local project persistence for axiom.",
   "main": "dist/index.js",

@@ -38,7 +38,7 @@ export async function initProject(name?: string): Promise<void> {
       dashboard: "axiom dashboard",
     },
     dependencies: {
-      "@axiom/agents": "^0.1.0",
+      "@axiomcm/agents": "^0.1.0",
       "dotenv": "^16.6.1",
     },
     devDependencies: {
@@ -95,7 +95,7 @@ import {
   createAgent,
   loadAgent,
   configure,
-} from "@axiom/agents";
+} from "@axiomcm/agents";
 
 configure({
   oauthToken: process.env.CLAUDE_CODE_OAUTH_TOKEN,
